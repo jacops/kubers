@@ -2,7 +2,7 @@
 .PHONY: all fmt lint check test build image clean deploy
 
 NAME=kubersctl
-VERSION=0.1.1
+VERSION=v0.1.2
 DOCKER_IMAGE="jacops/$(NAME):$(VERSION)"
 NAMESPACE=kubers-agent-injector
 CLUSTER_NAME=$(NAME)

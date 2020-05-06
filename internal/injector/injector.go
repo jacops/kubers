@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	DefaultVaultImage = "jacops/kubersctl:0.1.1"
+	DefaultVaultImage = "jacops/kubersctl:v0.1.2"
 )
 
 // AgentInjector is the top level structure holding all the
