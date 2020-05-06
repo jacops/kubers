@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubers
+  namespace: default
+  labels:
+    app.kubernetes.io/name: kubers
+spec:
+  ports:
+    - port: 443
+      targetPort: 8080
+  selector:
+    app.kubernetes.io/name: kubers

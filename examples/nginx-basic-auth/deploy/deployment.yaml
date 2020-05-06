@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: nginx
+  name: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      annotations:
+        kubers.jacops.pl/agent-inject: "true"
+        kubers.jacops.pl/agent-inject-secret-htpasswd: "keyvault://mykeyvault/nginx-htpasswd"
+        kubers.jacops.pl/agent-inject-azure-credentials-secret: "nginx-sp-creds"
+      labels:
+        app: nginx
+        aadpodidbinding: nginx
+    spec:
+      containers:
+        - image: nginx:1.17-alpine
+          name: nginx
+          volumeMounts:
+          - name: config-volume
+            mountPath: /etc/nginx/conf.d/default.conf
+            subPath: default.conf
+      volumes:
+      - name: config-volume
+        configMap:
+          name: nginx-config

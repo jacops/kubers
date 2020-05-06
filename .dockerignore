@@ -1,0 +1,13 @@
+.git
+.gitattributes
+.gitignore
+
+README.md
+CHANGELOG.md
+docker-compose.yml
+Dockerfile
+Makefile
+
+deploy
+dist
+examples

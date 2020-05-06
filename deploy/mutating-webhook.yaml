@@ -1,0 +1,20 @@
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: kubers-cfg
+  labels:
+    app.kubernetes.io/name: kubers
+webhooks:
+  - name: kubers.jacops.pl
+    clientConfig:
+      service:
+        name: kubers
+        path: "/mutate"
+        namespace: "kubers-agent-injector"
+      caBundle: ""
+    rules:
+      - operations: ["CREATE"]
+        apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["pods"]
