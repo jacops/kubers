@@ -1,7 +1,5 @@
 # Kubers - Kubernetes Remote Secrets
-
-> This repository is heavily inspired by https://github.com/hashicorp/vault-k8s.
-Huge kudos to the Hashicorp folks for the work they have done around the Vault integration with Kubernetes.
+[![Build Status](https://cloud.drone.io/api/badges/jacops/kubers/status.svg)](https://cloud.drone.io/jacops/kubers)
 
 Kubers is a simple and generic implementation of a SecOps pattern, where a sidecar container is responsible for retrieving secrets from services like Azure KeyVault and making it available to the user's application.
 
@@ -80,3 +78,7 @@ data:
 ## Examples
 
 Please go to `examples` folder.
+
+## Disclaimer
+This repository is heavily inspired by https://github.com/hashicorp/vault-k8s.
+Huge kudos to the Hashicorp folks for the work they have done around the Vault integration with Kubernetes.
