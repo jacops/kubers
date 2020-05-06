@@ -8,7 +8,7 @@ import (
 )
 
 func main() {
-	c := cli.NewCLI("kubersctl", "1.0.0")
+	c := cli.NewCLI("kubersctl", "0.1.0")
 	c.Args = os.Args[1:]
 	c.Commands = Commands
 	c.HelpFunc = cli.BasicHelpFunc("kubersctl")
