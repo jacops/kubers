@@ -50,6 +50,8 @@ Below is a table containing other kubers annotations.
 | `kubers.jacops.pl/agent-image` | Overrides a default docker image for an agent |
 | `kubers.jacops.pl/secret-volume-path` | Specifies where the secrets are to be mounted after fetching. |
 | `kubers.jacops.pl/secret-volume-path-<unique-name>` | Specifies where the `<unique-name>` secret is going to be mounted after fetching. |
+| `kubers.jacops.pl/preserve-secret-case` | If enabled will preserve the case of secret name. By default the name is converted to lower case. |
+| `kubers.jacops.pl/preserve-secret-case-<unique-name>` | If enabled will preserve the case of `<unique-name>` secret name. By default the name is converted to lower case. |
 
 
 ## Authentication
