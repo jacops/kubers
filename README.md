@@ -3,6 +3,8 @@
 
 Kubers is a simple implementation of a SecOps pattern, where a sidecar container is responsible for retrieving secrets from services like Azure KeyVault and making them available to the user's application via shared memory volume.
 
+![Diagram](statics/diagram.png)
+
 ## Supported drivers
 * Azure Keyvault (`keyvault://`)
 
