@@ -1,7 +1,7 @@
 # Kubers - Kubernetes Remote Secrets
 [![Build Status](https://cloud.drone.io/api/badges/jacops/kubers/status.svg)](https://cloud.drone.io/jacops/kubers)
 
-Kubers is a simple and generic implementation of a SecOps pattern, where a sidecar container is responsible for retrieving secrets from services like Azure KeyVault and making it available to the user's application.
+Kubers is a simple implementation of a SecOps pattern, where a sidecar container is responsible for retrieving secrets from services like Azure KeyVault and making them available to the user's application via shared memory volume.
 
 ## Supported drivers
 * Azure Keyvault (`keyvault://`)
@@ -38,6 +38,20 @@ kubectl apply -k git@github.com:jacops/kubers.git//deploy
           kubers.jacops.pl/agent-inject-secret-htpasswd: keyvault://examplekv/nginx-htpasswd
   ```
 
+The secret should be available from the main container in `/vault/secret/<unique-name>`.
+
+## Advanced Configuration
+
+Below is a table containing other kubers annotations.
+
+| Annotation | Description |
+|---|---|
+| `kubers.jacops.pl/agent-inject-azure-credentials-secret` | Secret with Azure credentials. See `Authentication` section for more info |
+| `kubers.jacops.pl/agent-image` | Overrides a default docker image for an agent |
+| `kubers.jacops.pl/secret-volume-path` | Specifies where the secrets are to be mounted after fetching. |
+| `kubers.jacops.pl/secret-volume-path-<unique-name>` | Specifies where the `<unique-name>` secret is going to be mounted after fetching. |
+
+
 ## Authentication
 
 Every secret manager service requires a user to authenticate against. While this responsibility is offloaded from your application, the sidecar container still needs to do this.
@@ -45,7 +59,7 @@ Every secret manager service requires a user to authenticate against. While this
 Below is the guide on how to authenticate against different service providers.
 
 ### Azure
-There are two ways to authenticate against Azure KeyVault. Service Principal and Managed Identity
+There are two ways to authenticate against Azure KeyVault. Service Principal and Managed Identity.
 
 #### Managed Identity (recommended)
 Using a system/user assigned identity has many benefits and in my opinion the main one is that you don't have to use any credentials and worry about secrets rotation.
@@ -55,7 +69,7 @@ To use Azure managed identities with your Kubernetes cluster, you need to instal
 Obviously this will only work in AKS and AKS-engine based clusters.
 
 #### Service Principal
-This method requires you to create a service principal and and a Kubernetes secret with the credentials, from which the sidecar container can authenticate itself against a KeyVault.
+This method requires you to create a service principal and a Kubernetes secret with the credentials, from which the sidecar container can authenticate itself against a KeyVault.
 
 Using service principal is not recommended and should be only used in development or if you are in a non Azure environment.
 

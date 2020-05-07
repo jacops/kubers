@@ -74,12 +74,9 @@ func Init(pod *corev1.Pod, cfg AgentInjectorConfig) error {
 	return nil
 }
 
-// secrets parses annotations with the pattern "vault.hashicorp.com/agent-inject-secret-".
+// secrets parses annotations with the pattern "kubers.jacops.com/agent-inject-secret-".
 // Everything following the final dash becomes the name of the secret,
 // and the value is the path in Vault.
-//
-// For example: "vault.hashicorp.com/agent-inject-secret-foobar: db/creds/foobar"
-// name: foobar, value: db/creds/foobar
 func (a *AgentInjector) secrets() []*agent.Secret {
 	var secrets []*agent.Secret
 
