@@ -1,5 +1,10 @@
 # Kubers - Kubernetes Remote Secrets
 [![Build Status](https://cloud.drone.io/api/badges/jacops/kubers/status.svg)](https://cloud.drone.io/jacops/kubers)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/jacops/kubers)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/jacops/kubers)
+![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/jacops/kubersctl)
+![Docker Pulls](https://img.shields.io/docker/pulls/jacops/kubersctl)
+![GitHub](https://img.shields.io/github/license/jacops/kubers)
 
 Kubers is a simple implementation of a SecOps pattern, where a sidecar container is responsible for retrieving secrets from services like Azure KeyVault and making them available to the user's application via shared memory volume.
 
