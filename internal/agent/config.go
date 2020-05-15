@@ -1,9 +1,17 @@
 package agent
 
-import "encoding/json"
+import (
+	"encoding/json"
+)
 
-// Secret is a metadata struct for fetching and storing secret
-type Secret struct {
+// Config is the top level struct that composes am Agent
+// configuration file.
+type Config struct {
+	Secrets []*SecretMetadata `json:"secret"`
+}
+
+// SecretMetadata is a metadata object sued for fetching and storing secret
+type SecretMetadata struct {
 	// Name of the secret used as the filename for the rendered secret file.
 	Name string `json:"name"`
 
@@ -12,12 +20,6 @@ type Secret struct {
 
 	// Mount Path
 	MountPath string `json:"mount_path"`
-}
-
-// Config is the top level struct that composes am Agent
-// configuration file.
-type Config struct {
-	Secrets []*Secret `json:"secret"`
 }
 
 // Render is a method used for converting config to json

@@ -1,10 +1,11 @@
 package agent
 
 import (
+	"context"
 	"testing"
 
 	"github.com/hashicorp/go-hclog"
-	"github.com/jacops/azure-keyvault-k8s/internal/agent/driver"
+	"github.com/jacops/kubers/internal/agent/driver"
 )
 
 func TestAgentCanRetrieveSecrets(t *testing.T) {
@@ -42,7 +43,7 @@ func getBasicAgent(config Config) *Agent {
 func getBasicAgentWithSecret() *Agent {
 
 	config := Config{
-		Secrets: []*Secret{
+		Secrets: []*SecretMetadata{
 			{
 				Name:      "test",
 				URL:       "dummy://test/test",
@@ -52,25 +53,32 @@ func getBasicAgentWithSecret() *Agent {
 	}
 
 	return &Agent{
-		logger:         getLogger(),
-		config:         config,
-		getDriverByURL: getOnlyDummySecretsDriverFromMapByURL,
-		writer:         NewDummyPathWriter(),
+		logger:        getLogger(),
+		config:        config,
+		driverFactory: &DummyDriverFactory{},
+		writer:        NewDummyPathWriter(),
 	}
+}
+
+type DummyDriverFactory struct{}
+
+// GetDriver returns Driver struct by name
+func (df *DummyDriverFactory) GetDriver(name string, config driver.Config) (driver.Driver, error) {
+	return &DummyDriver{}, nil
 }
 
 type DummyDriver struct{}
 type DummyPathWriter struct{}
 
-func (dd *DummyDriver) RetrieveSecret(secretURL string) (string, error) {
+func (dd *DummyDriver) GetSecret(ctx context.Context, secretURL string) (string, error) {
 	return "dummy-secret", nil
 }
 
-func getOnlyDummySecretsDriverFromMapByURL(secretURL string, driverConfig driver.Config) (SecretsDriver, error) {
+func getOnlyDummySecretsDriverFromMapByURL(secretURL string, driverConfig driver.Config) (driver.Driver, error) {
 	return &DummyDriver{}, nil
 }
 
-func (w *DummyPathWriter) WriteSecret(value string, metadata *Secret) error {
+func (w *DummyPathWriter) WriteSecret(value string, metadata *SecretMetadata) error {
 	return nil
 }
 

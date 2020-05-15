@@ -16,7 +16,6 @@ COPY . /build/
 RUN set -ex && \
     go build -o dist/kubersctl .
 
-
 FROM alpine:latest
 
 ENV KUBERSCTL_BIN=/usr/local/bin/kubersctl \

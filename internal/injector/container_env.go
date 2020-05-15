@@ -3,7 +3,7 @@ package injector
 import (
 	"encoding/base64"
 
-	"github.com/jacops/azure-keyvault-k8s/internal/agent"
+	"github.com/jacops/kubers/internal/agent"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/api/core/v1"
 )

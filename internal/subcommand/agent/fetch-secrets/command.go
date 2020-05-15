@@ -8,8 +8,8 @@ import (
 	"sync"
 
 	"github.com/hashicorp/go-hclog"
-	"github.com/jacops/azure-keyvault-k8s/internal/agent"
-	"github.com/jacops/azure-keyvault-k8s/internal/common"
+	"github.com/jacops/kubers/internal/agent"
+	"github.com/jacops/kubers/internal/common"
 	"github.com/mitchellh/cli"
 )
 
@@ -60,7 +60,9 @@ func (c *Command) Run(args []string) int {
 		Level:      level,
 		JSONFormat: (c.flagLogFormat == "json")})
 
-	agent := agent.NewAgent(agentConfig, logger)
+	logger.Info("Starting the agent...")
+
+	agent := agent.New(agentConfig, logger)
 
 	if err := agent.Retrieve(); err != nil {
 		c.UI.Error(fmt.Sprintf("Error occurred while retrieving secrets: %s", err))

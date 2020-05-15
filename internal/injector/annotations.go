@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/jacops/azure-keyvault-k8s/internal/agent"
+	"github.com/jacops/kubers/internal/agent"
 	corev1 "k8s.io/api/core/v1"
 )
 
@@ -77,8 +77,8 @@ func Init(pod *corev1.Pod, cfg AgentInjectorConfig) error {
 // secrets parses annotations with the pattern "kubers.jacops.com/agent-inject-secret-".
 // Everything following the final dash becomes the name of the secret,
 // and the value is the path in Vault.
-func (a *AgentInjector) secrets() []*agent.Secret {
-	var secrets []*agent.Secret
+func (a *AgentInjector) secrets() []*agent.SecretMetadata {
+	var secrets []*agent.SecretMetadata
 
 	for name, path := range a.Annotations {
 		secretName := fmt.Sprintf("%s-", AnnotationAgentInjectSecret)
@@ -101,7 +101,7 @@ func (a *AgentInjector) secrets() []*agent.Secret {
 				mountPath = val
 			}
 
-			secrets = append(secrets, &agent.Secret{
+			secrets = append(secrets, &agent.SecretMetadata{
 				Name:      name,
 				URL:       path,
 				MountPath: mountPath,

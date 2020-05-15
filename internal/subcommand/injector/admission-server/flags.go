@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/consul/command/flags"
-	"github.com/jacops/azure-keyvault-k8s/internal/injector"
+	"github.com/jacops/kubers/internal/injector"
 	"github.com/kelseyhightower/envconfig"
 )
 

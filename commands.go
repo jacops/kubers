@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
-	fetchSecrets "github.com/jacops/azure-keyvault-k8s/internal/subcommand/agent/fetch-secrets"
-	admissionServer "github.com/jacops/azure-keyvault-k8s/internal/subcommand/injector/admission-server"
+	fetchSecrets "github.com/jacops/kubers/internal/subcommand/agent/fetch-secrets"
+	admissionServer "github.com/jacops/kubers/internal/subcommand/injector/admission-server"
 	"github.com/mitchellh/cli"
 )
 

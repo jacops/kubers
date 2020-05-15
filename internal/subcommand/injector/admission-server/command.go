@@ -17,8 +17,8 @@ import (
 
 	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/vault-k8s/helper/cert"
-	"github.com/jacops/azure-keyvault-k8s/internal/common"
-	"github.com/jacops/azure-keyvault-k8s/internal/injector"
+	"github.com/jacops/kubers/internal/common"
+	"github.com/jacops/kubers/internal/injector"
 	"github.com/mitchellh/cli"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes"

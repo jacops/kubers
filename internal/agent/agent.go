@@ -1,58 +1,64 @@
 package agent
 
 import (
+	"context"
 	"fmt"
+	"net/url"
+	"time"
 
 	"github.com/hashicorp/go-hclog"
-	"github.com/jacops/azure-keyvault-k8s/internal/agent/driver"
+	"github.com/jacops/kubers/internal/agent/driver"
 )
 
 // Agent struct represnts the init continer
 type Agent struct {
-	config Config
-	logger hclog.Logger
-	writer SecretsWriter
-
-	getDriverByURL getSecretsDriverByURL
+	config        Config
+	logger        hclog.Logger
+	writer        SecretsWriter
+	driverFactory driver.Factory
 }
 
-// NewAgent returns new Agent with writeSecretToMountPath
-func NewAgent(config Config, logger hclog.Logger) *Agent {
+// New returns new Agent with writeSecretToMountPath
+func New(config Config, logger hclog.Logger) *Agent {
 	return &Agent{
-		config:         config,
-		logger:         logger,
-		writer:         NewMountPathWriter(logger),
-		getDriverByURL: getSecretsDriverFromMapByURL,
+		config:        config,
+		logger:        logger,
+		writer:        NewMountPathWriter(logger),
+		driverFactory: driver.NewSimpleFactory(),
 	}
+}
+
+func (a *Agent) getDriver(name string) (driver.Driver, error) {
+	return a.driverFactory.GetDriver(name, getDefaultDriverConfig(a.logger))
 }
 
 // Retrieve will get secrets and save them in specified location
 func (a *Agent) Retrieve() (err error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
 	errorChannel := make(chan error, len(a.config.Secrets))
 
-	driverConfig := driver.NewConfig(a.logger)
-
 	for _, secretMetadata := range a.config.Secrets {
-		go func(secretMetadata *Secret) (err error) {
+		go func(secretMetadata *SecretMetadata) (err error) {
 			defer func() {
 				errorChannel <- err
 			}()
 
-			driver, err := a.getDriverByURL(secretMetadata.URL, driverConfig)
+			secretDriver, err := a.getDriver(getDriverNameByURL(secretMetadata.URL))
 			if err != nil {
 				return
 			}
 
-			secret, err := driver.RetrieveSecret(secretMetadata.URL)
+			secret, err := secretDriver.GetSecret(ctx, secretMetadata.URL)
 			if err != nil {
 				return
 			}
 
-			if err = a.writer.WriteSecret(secret, secretMetadata); err != nil {
-				return
-			}
+			err = a.writer.WriteSecret(secret, secretMetadata)
 
 			return
+
 		}(secretMetadata)
 	}
 
@@ -67,4 +73,15 @@ func (a *Agent) Retrieve() (err error) {
 
 	a.logger.Info(fmt.Sprintf("Secrets were successfully processed..."))
 	return nil
+}
+
+func getDefaultDriverConfig(logger hclog.Logger) driver.Config {
+	return driver.Config{
+		Logger: logger,
+	}
+}
+
+func getDriverNameByURL(secretURL string) string {
+	u, _ := url.Parse(secretURL)
+	return u.Scheme
 }
