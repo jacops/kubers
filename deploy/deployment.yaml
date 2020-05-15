@@ -19,7 +19,7 @@ spec:
       serviceAccountName: "kubers"
       containers:
         - name: kubers
-          image: jacops/kubersctl:v0.1.2
+          image: jacops/kubersctl:v0.1.3
           imagePullPolicy: IfNotPresent
           env:
             - name: NAMESPACE
