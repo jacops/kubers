@@ -6,12 +6,12 @@
 ![Docker Pulls](https://img.shields.io/docker/pulls/jacops/kubersctl)
 ![GitHub](https://img.shields.io/github/license/jacops/kubers)
 
-Kubers is a simple implementation of a SecOps pattern, where a sidecar container is responsible for retrieving secrets from services like Azure KeyVault and making them available to the user's application via shared memory volume.
+Kubers is a simple implementation of a SecOps pattern, where a sidecar or init container is responsible for retrieving secrets from services like Azure KeyVault and making them available to the user's application via shared memory volume.
 
 ![Diagram](statics/diagram.png)
 
-## Supported drivers
-* Azure Keyvault (`keyvault://`)
+## Supported drivers and services
+* Azure (KeyVault)
 
 ## Installation
 Use `kustomize` to install `kubers`:
@@ -25,14 +25,20 @@ kubectl apply -k git@github.com:jacops/kubers.git//deploy
    ```
    kubers.jacops.pl/agent-inject: "true"
    ```
-2. To configure secret injection, please add the following annotation:
+2. Set agent driver by adding the following annotation:
+  ```
+  kubers.jacops.pl/agent-driver: "<azure-aws-or-other>"
+  ```
+  > This annotation can be optional if the driver is set globally in the `kubers` deployment.
+
+3. To configure secret injection, please add the following annotation:
 
   ```
-  kubers.jacops.pl/agent-inject-secret-<unique-name>: "<driver-name>://<service-name>/<key-name>"
+  kubers.jacops.pl/agent-inject-secret-<unique-name>: "<driver-name>://[<service-name>/]<key-name>"
   ```
   * `unique-name` - the filename of the rendered secret and must be unique if multiple secrets are defined by the user.
   * `driver-name` - Name of a driver used for retrieving the secret
-  * `service-name` - Name of a remote service where the secret is stored.
+  * `service-name` (optional) - Name of a remote service where the secret is stored.
   * `key-name` - Key name under which the secret is stored in the remote service.
 
   Deployment example:
@@ -41,6 +47,7 @@ kubectl apply -k git@github.com:jacops/kubers.git//deploy
     template:
       metadata:
         annotations:
+          kubers.jacops.pl/agent-driver: "azure"
           kubers.jacops.pl/agent-inject: "true"
           kubers.jacops.pl/agent-inject-secret-htpasswd: keyvault://examplekv/nginx-htpasswd
   ```
@@ -53,7 +60,7 @@ Below is a table containing other kubers annotations.
 
 | Annotation | Description |
 |---|---|
-| `kubers.jacops.pl/agent-inject-azure-credentials-secret` | Secret with Azure credentials. See `Authentication` section for more info |
+| `kubers.jacops.pl/agent-driver-azure-credentials-secret` | Secret with Azure credentials. See `Authentication` section for more info |
 | `kubers.jacops.pl/agent-image` | Overrides a default docker image for an agent |
 | `kubers.jacops.pl/secret-volume-path` | Specifies where the secrets are to be mounted after fetching. |
 | `kubers.jacops.pl/secret-volume-path-<unique-name>` | Specifies where the `<unique-name>` secret is going to be mounted after fetching. |

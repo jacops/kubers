@@ -13,7 +13,7 @@ func TestAgentCanRetrieveSecrets(t *testing.T) {
 		name  string
 		agent Agent
 	}{
-		{name: "NoSecrets", agent: *getBasicAgent(Config{})},
+		{name: "NoSecrets", agent: *getBasicAgent(&Config{})},
 		{name: "WithSecretsAndDummyWriter", agent: *getBasicAgentWithSecret()},
 	}
 
@@ -33,7 +33,7 @@ func getLogger() hclog.Logger {
 	})
 }
 
-func getBasicAgent(config Config) *Agent {
+func getBasicAgent(config *Config) *Agent {
 	return &Agent{
 		logger: getLogger(),
 		config: config,
@@ -42,7 +42,7 @@ func getBasicAgent(config Config) *Agent {
 
 func getBasicAgentWithSecret() *Agent {
 
-	config := Config{
+	config := &Config{
 		Secrets: []*SecretMetadata{
 			{
 				Name:      "test",
@@ -53,18 +53,11 @@ func getBasicAgentWithSecret() *Agent {
 	}
 
 	return &Agent{
-		logger:        getLogger(),
-		config:        config,
-		driverFactory: &DummyDriverFactory{},
-		writer:        NewDummyPathWriter(),
+		logger: getLogger(),
+		config: config,
+		driver: &DummyDriver{},
+		writer: NewDummyPathWriter(),
 	}
-}
-
-type DummyDriverFactory struct{}
-
-// GetDriver returns Driver struct by name
-func (df *DummyDriverFactory) GetDriver(name string, config driver.Config) (driver.Driver, error) {
-	return &DummyDriver{}, nil
 }
 
 type DummyDriver struct{}
@@ -85,7 +78,3 @@ func (w *DummyPathWriter) WriteSecret(value string, metadata *SecretMetadata) er
 func NewDummyPathWriter() *DummyPathWriter {
 	return &DummyPathWriter{}
 }
-
-// func (r *DummyRetriever) retrieveSecret(secretURL string) (string, error) {
-// 	return "", nil
-// }

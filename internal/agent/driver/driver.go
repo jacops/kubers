@@ -15,31 +15,15 @@ type Driver interface {
 }
 
 // Config is a main driver configuration
-type Config struct {
-	Logger hclog.Logger
-}
+type Config map[string]string
 
-// Factory is a struct responsible for creating drivers
-type Factory interface {
-	GetDriver(name string, config Config) (Driver, error)
-}
-
-//SimpleFactory is a factory based on driver name
-type SimpleFactory struct {
-}
-
-// NewSimpleFactory returns SecretURLDriverFactory
-func NewSimpleFactory() *SimpleFactory {
-	return &SimpleFactory{}
-}
-
-// GetDriver returns Driver struct by name
-func (df *SimpleFactory) GetDriver(name string, config Config) (Driver, error) {
+// New returns Driver struct by name
+func New(name string, config *Config, logger hclog.Logger) (Driver, error) {
 	var secretDriver Driver
 
 	switch name {
-	case keyVaultDriverName:
-		return newKeyVaultDriver(config), nil
+	case "azure":
+		return newAzureDriver(config, logger), nil
 	}
 
 	return secretDriver, fmt.Errorf("Driver not found: %s", name)

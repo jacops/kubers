@@ -3,7 +3,6 @@ package agent
 import (
 	"context"
 	"fmt"
-	"net/url"
 	"time"
 
 	"github.com/hashicorp/go-hclog"
@@ -12,24 +11,25 @@ import (
 
 // Agent struct represnts the init continer
 type Agent struct {
-	config        Config
-	logger        hclog.Logger
-	writer        SecretsWriter
-	driverFactory driver.Factory
+	config *Config
+	logger hclog.Logger
+	writer SecretsWriter
+	driver driver.Driver
 }
 
 // New returns new Agent with writeSecretToMountPath
-func New(config Config, logger hclog.Logger) *Agent {
-	return &Agent{
-		config:        config,
-		logger:        logger,
-		writer:        NewMountPathWriter(logger),
-		driverFactory: driver.NewSimpleFactory(),
+func New(config *Config, logger hclog.Logger) (*Agent, error) {
+	secretDriver, err := driver.New(config.DriverName, config.DriverConfig, logger)
+	if err != nil {
+		return nil, err
 	}
-}
 
-func (a *Agent) getDriver(name string) (driver.Driver, error) {
-	return a.driverFactory.GetDriver(name, getDefaultDriverConfig(a.logger))
+	return &Agent{
+		config: config,
+		logger: logger,
+		writer: NewMountPathWriter(logger),
+		driver: secretDriver,
+	}, nil
 }
 
 // Retrieve will get secrets and save them in specified location
@@ -45,12 +45,7 @@ func (a *Agent) Retrieve() (err error) {
 				errorChannel <- err
 			}()
 
-			secretDriver, err := a.getDriver(getDriverNameByURL(secretMetadata.URL))
-			if err != nil {
-				return
-			}
-
-			secret, err := secretDriver.GetSecret(ctx, secretMetadata.URL)
+			secret, err := a.driver.GetSecret(ctx, secretMetadata.URL)
 			if err != nil {
 				return
 			}
@@ -73,15 +68,4 @@ func (a *Agent) Retrieve() (err error) {
 
 	a.logger.Info(fmt.Sprintf("Secrets were successfully processed..."))
 	return nil
-}
-
-func getDefaultDriverConfig(logger hclog.Logger) driver.Config {
-	return driver.Config{
-		Logger: logger,
-	}
-}
-
-func getDriverNameByURL(secretURL string) string {
-	u, _ := url.Parse(secretURL)
-	return u.Scheme
 }

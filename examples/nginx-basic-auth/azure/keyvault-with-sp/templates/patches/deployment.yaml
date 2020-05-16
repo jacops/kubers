@@ -6,5 +6,6 @@ spec:
   template:
     metadata:
       annotations:
-        kubers.jacops.pl/agent-inject-azure-credentials-secret: "nginx-sp-creds"
+        kubers.jacops.pl/agent-driver: "azure"
+        kubers.jacops.pl/agent-driver-azure-credentials-secret: "nginx-sp-creds"
         kubers.jacops.pl/agent-inject-secret-htpasswd: "keyvault://${key_vault_name}/${secret_key}"

@@ -13,8 +13,6 @@ spec:
     metadata:
       annotations:
         kubers.jacops.pl/agent-inject: "true"
-        kubers.jacops.pl/agent-inject-secret-htpasswd: "keyvault://mykeyvault/nginx-htpasswd"
-        kubers.jacops.pl/agent-inject-azure-credentials-secret: "nginx-sp-creds"
       labels:
         app: nginx
         aadpodidbinding: nginx

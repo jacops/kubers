@@ -2,12 +2,16 @@ package agent
 
 import (
 	"encoding/json"
+
+	"github.com/jacops/kubers/internal/agent/driver"
 )
 
 // Config is the top level struct that composes am Agent
 // configuration file.
 type Config struct {
-	Secrets []*SecretMetadata `json:"secret"`
+	Secrets      []*SecretMetadata `json:"secret"`
+	DriverName   string            `json:"driver_name"`
+	DriverConfig *driver.Config    `json:"driver_config"`
 }
 
 // SecretMetadata is a metadata object sued for fetching and storing secret

@@ -11,8 +11,17 @@ import (
 )
 
 const (
-	// AnnotationAgentAzureCredentialsSecret enables authentication via Azure service principal
-	AnnotationAgentAzureCredentialsSecret = "kubers.jacops.pl/agent-inject-azure-credentials-secret"
+	// AnnotationAgentDriver sets a driver for the agent used to retrieve secrets
+	AnnotationAgentDriver = "kubers.jacops.pl/agent-driver"
+
+	// AnnotationAgentDriverAzureCredentialsSecret enables authentication via Azure service principal
+	AnnotationAgentDriverAzureCredentialsSecret = "kubers.jacops.pl/agent-driver-azure-credentials-secret"
+
+	// AnnotationAgentDriverAWSCredentialsSecret enables authentication via AWS keys
+	AnnotationAgentDriverAWSCredentialsSecret = "kubers.jacops.pl/agent-driver-aws-credentials-secret"
+
+	// AnnotationAgentDriverAWSRegion overrides aws region passed to the operator
+	AnnotationAgentDriverAWSRegion = "kubers.jacops.pl/agent-driver-aws-region"
 
 	// AnnotationAgentStatus is the key of the annotation that is added to
 	// a pod after an injection is done.
@@ -45,7 +54,9 @@ const (
 
 // AgentInjectorConfig ...
 type AgentInjectorConfig struct {
-	Image string
+	Image      string
+	DriverName string
+	AWSRegion  string
 }
 
 // Init configures the expected annotations required to create a new instance
@@ -62,6 +73,14 @@ func Init(pod *corev1.Pod, cfg AgentInjectorConfig) error {
 
 	if _, ok := pod.ObjectMeta.Annotations[AnnotationVaultSecretVolumePath]; !ok {
 		pod.ObjectMeta.Annotations[AnnotationVaultSecretVolumePath] = secretVolumePath
+	}
+
+	if _, ok := pod.ObjectMeta.Annotations[AnnotationAgentDriver]; !ok {
+		pod.ObjectMeta.Annotations[AnnotationAgentDriver] = cfg.DriverName
+	}
+
+	if _, ok := pod.ObjectMeta.Annotations[AnnotationAgentDriverAWSRegion]; !ok {
+		pod.ObjectMeta.Annotations[AnnotationAgentDriverAWSRegion] = cfg.AWSRegion
 	}
 
 	if _, ok := pod.ObjectMeta.Annotations[AnnotationAgentImage]; !ok {

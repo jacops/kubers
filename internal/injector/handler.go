@@ -38,6 +38,8 @@ type Handler struct {
 	Clientset         *kubernetes.Clientset
 	Log               hclog.Logger
 	Image             string
+	DriverName        string
+	AWSRegion         string
 }
 
 // Handle is the http.HandlerFunc implementation that actually handles the
@@ -133,7 +135,9 @@ func (h *Handler) Mutate(req *v1beta1.AdmissionRequest) *v1beta1.AdmissionRespon
 	h.Log.Debug("setting default annotations..")
 	var patches []*jsonpatch.JsonPatchOperation
 	cfg := AgentInjectorConfig{
-		Image: h.Image,
+		Image:      h.Image,
+		DriverName: h.DriverName,
+		AWSRegion:  h.AWSRegion,
 	}
 	err = Init(&pod, cfg)
 	if err != nil {

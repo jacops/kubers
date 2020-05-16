@@ -38,7 +38,7 @@ func (c *Command) Run(args []string) int {
 		return 1
 	}
 
-	var agentConfig agent.Config
+	var agentConfig *agent.Config
 	agentConfigJSON, err := base64.StdEncoding.DecodeString(c.flagAgentConfig)
 	if err != nil {
 		c.UI.Error(fmt.Sprintf("Could not decode agent config: %s", err))
@@ -62,7 +62,11 @@ func (c *Command) Run(args []string) int {
 
 	logger.Info("Starting the agent...")
 
-	agent := agent.New(agentConfig, logger)
+	agent, err := agent.New(agentConfig, logger)
+	if err != nil {
+		c.UI.Error(fmt.Sprintf("Error creating an agent: %s", err))
+		return 1
+	}
 
 	if err := agent.Retrieve(); err != nil {
 		c.UI.Error(fmt.Sprintf("Error occurred while retrieving secrets: %s", err))

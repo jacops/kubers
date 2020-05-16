@@ -4,6 +4,8 @@ import (
 	"reflect"
 	"strings"
 	"testing"
+
+	"github.com/hashicorp/go-hclog"
 )
 
 func TestDriverCanBeFoundByName(t *testing.T) {
@@ -11,13 +13,12 @@ func TestDriverCanBeFoundByName(t *testing.T) {
 		name       string
 		driverType string
 	}{
-		{name: "keyvault", driverType: "*driver.KeyVaultDriver"},
+		{name: "azure", driverType: "*driver.AzureDriver"},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			factory := NewSimpleFactory()
-			driver, err := factory.GetDriver(tt.name, Config{})
+			driver, err := New(tt.name, &Config{}, getLogger())
 			driverTypeStr := reflect.TypeOf(driver).String()
 			if driverTypeStr != tt.driverType {
 				t.Errorf("Unexpected driver type (%s) by name (%s)", driverTypeStr, tt.name)
@@ -38,8 +39,7 @@ func TestNotFoundDriverThrowingError(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			factory := NewSimpleFactory()
-			driver, err := factory.GetDriver(tt.name, Config{})
+			driver, err := New(tt.name, &Config{}, getLogger())
 
 			if driver != nil {
 				t.Errorf("did not expect any driver: %s", tt.name)
@@ -82,4 +82,10 @@ func TestUrlCanReturnServiceKeyNamesPair(t *testing.T) {
 			}
 		})
 	}
+}
+
+func getLogger() hclog.Logger {
+	return hclog.New(&hclog.LoggerOptions{
+		Name: "handler",
+	})
 }

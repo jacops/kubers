@@ -12,7 +12,7 @@ func TestInitCanSet(t *testing.T) {
 	annotations := make(map[string]string)
 	pod := testPod(annotations)
 
-	err := Init(pod, AgentInjectorConfig{"foobar-image"})
+	err := Init(pod, AgentInjectorConfig{"foobar-image", "", ""})
 	if err != nil {
 		t.Errorf("got error, shouldn't have: %s", err)
 	}
@@ -41,7 +41,7 @@ func TestInitDefaults(t *testing.T) {
 	annotations := make(map[string]string)
 	pod := testPod(annotations)
 
-	err := Init(pod, AgentInjectorConfig{DefaultVaultImage})
+	err := Init(pod, AgentInjectorConfig{DefaultVaultImage, "", ""})
 	if err != nil {
 		t.Errorf("got error, shouldn't have: %s", err)
 	}
@@ -89,7 +89,7 @@ func TestCouldErrorAnnotations(t *testing.T) {
 		pod := testPod(annotations)
 		var patches []*jsonpatch.JsonPatchOperation
 
-		err := Init(pod, AgentInjectorConfig{""})
+		err := Init(pod, AgentInjectorConfig{"", "", ""})
 		if err != nil {
 			t.Errorf("got error, shouldn't have: %s", err)
 		}
@@ -106,7 +106,7 @@ func TestCouldErrorAnnotations(t *testing.T) {
 func TestInitEmptyPod(t *testing.T) {
 	var pod *corev1.Pod
 
-	err := Init(pod, AgentInjectorConfig{"foobar-image"})
+	err := Init(pod, AgentInjectorConfig{"foobar-image", "", ""})
 	if err == nil {
 		t.Errorf("got no error, should have")
 	}

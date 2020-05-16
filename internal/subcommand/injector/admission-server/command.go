@@ -28,14 +28,17 @@ import (
 type Command struct {
 	UI cli.Ui
 
-	flagListen     string // Address of Vault Server
-	flagLogLevel   string // Log verbosity
-	flagLogFormat  string // Log format
-	flagCertFile   string // TLS Certificate to serve
-	flagKeyFile    string // TLS private key to serve
-	flagAutoName   string // MutatingWebhookConfiguration for updating
-	flagAutoHosts  string // SANs for the auto-generated TLS cert.
-	flagAgentImage string //Agent Docker image
+	flagListen      string // Address of Vault Server
+	flagLogLevel    string // Log verbosity
+	flagLogFormat   string // Log format
+	flagCertFile    string // TLS Certificate to serve
+	flagKeyFile     string // TLS private key to serve
+	flagAutoName    string // MutatingWebhookConfiguration for updating
+	flagAutoHosts   string // SANs for the auto-generated TLS cert.
+	flagAgentImage  string // Agent Docker image
+	flagAgentDriver string // Agent Driver
+
+	flagAWSRegion string // AWS region of Secret Manager
 
 	flagSet *flag.FlagSet
 
@@ -107,6 +110,8 @@ func (c *Command) Run(args []string) int {
 		RequireAnnotation: true,
 		Log:               logger,
 		Image:             c.flagAgentImage,
+		DriverName:        c.flagAgentDriver,
+		AWSRegion:         c.flagAWSRegion,
 	}
 
 	mux := http.NewServeMux()
