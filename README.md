@@ -26,31 +26,31 @@ kubectl apply -k git@github.com:jacops/kubers.git//deploy
    kubers.jacops.pl/agent-inject: "true"
    ```
 2. Set agent driver by adding the following annotation:
-  ```
-  kubers.jacops.pl/agent-driver: "<azure-aws-or-other>"
-  ```
-  > This annotation can be optional if the driver is set globally in the `kubers` deployment.
+   ```
+   kubers.jacops.pl/agent-driver: "<azure-aws-or-other>"
+   ```
+   > This annotation can be optional if the driver is set globally in the `kubers` deployment.
 
 3. To configure secret injection, please add the following annotation:
 
-  ```
-  kubers.jacops.pl/agent-inject-secret-<unique-name>: "<driver-name>://[<service-name>/]<key-name>"
-  ```
-  * `unique-name` - the filename of the rendered secret and must be unique if multiple secrets are defined by the user.
-  * `driver-name` - Name of a driver used for retrieving the secret
-  * `service-name` (optional) - Name of a remote service where the secret is stored.
-  * `key-name` - Key name under which the secret is stored in the remote service.
+   ```
+   kubers.jacops.pl/agent-inject-secret-<unique-name>: "<driver-name>://[<service-name>/]<key-name>"
+   ```
+   * `unique-name` - the filename of the rendered secret and must be unique if multiple secrets are defined by  the user.
+   * `driver-name` - Name of a driver used for retrieving the secret
+   * `service-name` (optional) - Name of a remote service where the secret is stored.
+   * `key-name` - Key name under which the secret is stored in the remote service.
 
-  Deployment example:
-  ```
-  spec:
-    template:
-      metadata:
-        annotations:
-          kubers.jacops.pl/agent-driver: "azure"
-          kubers.jacops.pl/agent-inject: "true"
-          kubers.jacops.pl/agent-inject-secret-htpasswd: keyvault://examplekv/nginx-htpasswd
-  ```
+Deployment example:
+```
+spec:
+  template:
+    metadata:
+      annotations:
+        kubers.jacops.pl/agent-driver: "azure"
+        kubers.jacops.pl/agent-inject: "true"
+        kubers.jacops.pl/agent-inject-secret-htpasswd: keyvault://examplekv/nginx-htpasswd
+```
 
 The secret should be available from the main container in `/vault/secret/<unique-name>`.
 
@@ -91,7 +91,7 @@ Using service principal is not recommended and should be only used in developmen
 
 To configure kubers agent to use service principal authentication, please add the following annotation to your pod:
 ```
-kubers.jacops.pl/agent-inject-azure-credentials-secret: "<secret-name-of-the-sp-credentials>"
+kubers.jacops.pl/agent-driver-azure-credentials-secret: "<secret-name-of-the-sp-credentials>"
 ```
 
 `secret-name-of-the-sp-credentials` secret should be structured as below:
