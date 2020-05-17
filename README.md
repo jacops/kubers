@@ -14,10 +14,14 @@ Kubers is a simple implementation of a SecOps pattern, where a sidecar or init c
 * Azure (KeyVault)
 
 ## Installation
-Use `kustomize` to install `kubers`:
+
+### Kustomize
 ```
 kubectl apply -k git@github.com:jacops/kubers.git//deploy
 ```
+
+### Helm
+Please go to `./chart` folder for instructions and available configuration.
 
 ## Usage
 
