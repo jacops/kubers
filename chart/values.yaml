@@ -1,12 +1,11 @@
-image:
-  repository: docker.io/jacops/kubersctl
-  tag: v0.2.0
-  pullPolicy: IfNotPresent
-
 rbac:
   enabled: true
 
 injector:
+  image:
+    repository: docker.io/jacops/kubersd
+    tag: v0.3.0
+    pullPolicy: IfNotPresent
   serviceAccount:
     create: true
     # The name of the service account to use.
