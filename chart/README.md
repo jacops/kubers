@@ -22,11 +22,12 @@ helm repo add jacops https://charts.jacops.pl
 
 | Parameter | Default | Description |
 | --- | --- | --- |
-| `image.repository` | `docker.io/jacops/kubersctl` | Image repository |
-| `image.tag` | `<VERSION>` | Image tag |
-| `image.pullPolicy` | `IfNotPresent` | Image pull policy |
-| `rbac.enabled` | `true` | If `true`, create and use RBAC resources |
+| `injector.image.repository` | `docker.io/jacops/kubersctl` | Image repository |
+| `injector.image.tag` | `<VERSION>` | Image tag |
+| `injector.image.pullPolicy` | `IfNotPresent` | Image pull policy |
 | `injector.serviceAccount.create` | `true` | If `true`, create a new service account |
 | `injector.serviceAccount.name` | `kubers` | Service account to be used
 | `injector.resources.requests.cpu` | `50m` | CPU resource requests for the Flux deployment |
-| `injector.resources.requests.memory` | `64Mi` | Memory resource requests for the Flux deployment | | `injector.resources.limits` | `None` | CPU/memory resource limits for the Flux deployment |
+| `injector.resources.requests.memory` | `64Mi` | Memory resource requests for the Flux deployment |
+| `injector.resources.limits` | `None` | CPU/memory resource limits for the Flux deployment |
+| `rbac.enabled` | `true` | If `true`, create and use RBAC resources |
