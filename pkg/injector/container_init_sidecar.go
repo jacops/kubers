@@ -24,6 +24,6 @@ func (a *AgentInjector) ContainerInitSidecar() (corev1.Container, error) {
 		ImagePullPolicy: "IfNotPresent",
 		Env:             envs,
 		VolumeMounts:    volumeMounts,
-		Args:            []string{"agent", "fetch-secrets"},
+		Args:            []string{"fetch-secrets"},
 	}, nil
 }

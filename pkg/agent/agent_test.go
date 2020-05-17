@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/go-hclog"
-	"github.com/jacops/kubers/internal/agent/driver"
+	"github.com/jacops/kubers/pkg/agent/driver"
 )
 
 func TestAgentCanRetrieveSecrets(t *testing.T) {

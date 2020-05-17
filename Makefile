@@ -1,11 +1,12 @@
 .DEFAULT_GOAL := build
 .PHONY: all fmt lint check test build image clean deploy
 
-NAME=kubersctl
-VERSION=v0.2.1
-DOCKER_IMAGE="jacops/$(NAME):$(VERSION)"
-NAMESPACE=kubers-agent-injector
-CLUSTER_NAME=$(NAME)
+IMAGE_TAG:=$(shell ./docker/image-tag)
+IMAGE_PREFIX=jacops/
+NAMESPACE=kubers
+CLUSTER_NAME=kubers
+GOOS=linux
+GOARCH=amd64
 
 minikube:
 	@minikube start -p $(CLUSTER_NAME) --insecure-registry "10.0.0.0/24"
@@ -17,9 +18,11 @@ minikube-profile:
 	@kubectl config use-context $(CLUSTER_NAME)
 	@kubectl config set-context --current --namespace $(NAMESPACE)
 
-build:
-	@echo "Building the binary..."
-	@go build -o dist/kubersctl .
+build-%:
+	@echo "Building $*..."
+	GOOS=$(GOOS) GOARCH=$(GOARCH) go build -i -v -ldflags="-X main.version=$(IMAGE_TAG)" -o dist/$* ./cmd/$*
+
+build: build-kubersd build-kubers-agent
 
 test: unit-test
 
@@ -29,11 +32,15 @@ unit-test:
 clean:
 	@rm -rf dist
 
-docker-build:
-	docker build . -t $(DOCKER_IMAGE)
+docker-build-%: build-%
+	docker build -f docker/Dockerfile.$* -t $(IMAGE_PREFIX)$*:$(IMAGE_TAG) .
 
-docker-push:
-	docker push $(DOCKER_IMAGE)
+docker-build: docker-build-kubersd docker-build-kubers-agent
+
+docker-push-%:
+	docker push $(IMAGE_PREFIX)$*:$(IMAGE_TAG)
+
+docker-push: docker-push-kubersd docker-push-kubers-agent
 
 k8s-deploy:
 	kubectl apply -k deploy

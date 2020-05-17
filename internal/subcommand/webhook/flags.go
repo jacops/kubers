@@ -1,11 +1,10 @@
-package admissionserver
+package webhook
 
 import (
 	"flag"
 	"fmt"
 
 	"github.com/hashicorp/consul/command/flags"
-	"github.com/jacops/kubers/internal/injector"
 	"github.com/kelseyhightower/envconfig"
 )
 
@@ -47,6 +46,9 @@ type Specification struct {
 }
 
 func (c *Command) init() {
+
+	defaultAgentImage := "jacops/kubers-agent:" + c.Version
+
 	c.flagSet = flag.NewFlagSet("", flag.ContinueOnError)
 	c.flagSet.StringVar(&c.flagListen, "listen", ":8080", "Address to bind listener to.")
 	c.flagSet.StringVar(&c.flagLogLevel, "log-level", DefaultLogLevel, "Log verbosity level. Supported values "+
@@ -61,8 +63,8 @@ func (c *Command) init() {
 		"PEM-encoded TLS certificate to serve. If blank, will generate random cert.")
 	c.flagSet.StringVar(&c.flagKeyFile, "tls-key-file", "",
 		"PEM-encoded TLS private key to serve. If blank, will generate random cert.")
-	c.flagSet.StringVar(&c.flagAgentImage, "agent-image", injector.DefaultVaultImage,
-		fmt.Sprintf("Docker image for Agent. Defaults to %q.", injector.DefaultVaultImage))
+	c.flagSet.StringVar(&c.flagAgentImage, "agent-image", defaultAgentImage,
+		fmt.Sprintf("Docker image for Agent. Defaults to %q.", defaultAgentImage))
 	c.flagSet.StringVar(&c.flagAWSRegion, "aws-region", "",
 		fmt.Sprintf("AWS region where secret manager is deployed."))
 	c.flagSet.StringVar(&c.flagAgentDriver, "driver-name", "",

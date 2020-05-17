@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/go-hclog"
-	"github.com/jacops/kubers/internal/agent/driver"
+	"github.com/jacops/kubers/pkg/agent/driver"
 )
 
 // Agent struct represnts the init continer

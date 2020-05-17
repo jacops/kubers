@@ -11,7 +11,7 @@ webhooks:
       service:
         name: webhook
         path: "/mutate"
-        namespace: "kubers-agent-injector"
+        namespace: "kubers"
       caBundle: ""
     rules:
       - operations: ["CREATE"]

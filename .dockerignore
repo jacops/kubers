@@ -9,5 +9,4 @@ Dockerfile
 Makefile
 
 deploy
-dist
 examples

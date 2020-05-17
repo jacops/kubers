@@ -19,7 +19,7 @@ spec:
       serviceAccountName: "kubers"
       containers:
         - name: kubers
-          image: jacops/kubersctl:v0.2.1
+          image: jacops/kubersd:v0.2.1
           imagePullPolicy: IfNotPresent
           env:
             - name: NAMESPACE
@@ -35,8 +35,7 @@ spec:
             - name: AGENT_INJECT_TLS_AUTO
               value: kubers-cfg
             - name: AGENT_INJECT_TLS_AUTO_HOSTS
-              value: "kubers,kubers.$(NAMESPACE),kubers.$(NAMESPACE).svc"
+              value: "webhook,webhook.$(NAMESPACE),webhook.$(NAMESPACE).svc"
           args:
-            - injector
-            - admission-server
+            - webhook
             - 2>&1

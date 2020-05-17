@@ -1,4 +1,4 @@
-package admissionserver
+package webhook
 
 import (
 	"os"

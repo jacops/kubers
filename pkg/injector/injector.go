@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/jacops/kubers/internal/agent"
+	"github.com/jacops/kubers/pkg/agent"
 	"github.com/mattbaird/jsonpatch"
 	corev1 "k8s.io/api/core/v1"
 )
 
 const (
-	DefaultVaultImage = "jacops/kubersctl:v0.2.1"
+	DefaultVaultImage = "jacops/kubers-agent"
 )
 
 // AgentInjector is the top level structure holding all the

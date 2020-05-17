@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/jacops/kubers/internal/agent"
+	"github.com/jacops/kubers/pkg/agent"
 	corev1 "k8s.io/api/core/v1"
 )
 
@@ -85,7 +85,7 @@ func Init(pod *corev1.Pod, cfg AgentInjectorConfig) error {
 
 	if _, ok := pod.ObjectMeta.Annotations[AnnotationAgentImage]; !ok {
 		if cfg.Image == "" {
-			cfg.Image = DefaultVaultImage
+			return errors.New("No agent image provided")
 		}
 		pod.ObjectMeta.Annotations[AnnotationAgentImage] = cfg.Image
 	}

@@ -1,4 +1,4 @@
-package admissionserver
+package webhook
 
 import (
 	"context"
@@ -17,8 +17,8 @@ import (
 
 	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/vault-k8s/helper/cert"
-	"github.com/jacops/kubers/internal/common"
-	"github.com/jacops/kubers/internal/injector"
+	"github.com/jacops/kubers/pkg/common"
+	"github.com/jacops/kubers/pkg/injector"
 	"github.com/mitchellh/cli"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes"
@@ -26,7 +26,8 @@ import (
 )
 
 type Command struct {
-	UI cli.Ui
+	UI      cli.Ui
+	Version string
 
 	flagListen      string // Address of Vault Server
 	flagLogLevel    string // Log verbosity

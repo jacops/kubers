@@ -35,4 +35,4 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: kubers
-    namespace: kubers-agent-injector
+    namespace: kubers

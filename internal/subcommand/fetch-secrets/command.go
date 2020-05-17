@@ -8,8 +8,8 @@ import (
 	"sync"
 
 	"github.com/hashicorp/go-hclog"
-	"github.com/jacops/kubers/internal/agent"
-	"github.com/jacops/kubers/internal/common"
+	"github.com/jacops/kubers/pkg/agent"
+	"github.com/jacops/kubers/pkg/common"
 	"github.com/mitchellh/cli"
 )
 

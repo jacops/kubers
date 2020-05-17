@@ -89,7 +89,7 @@ func TestCouldErrorAnnotations(t *testing.T) {
 		pod := testPod(annotations)
 		var patches []*jsonpatch.JsonPatchOperation
 
-		err := Init(pod, AgentInjectorConfig{"", "", ""})
+		err := Init(pod, AgentInjectorConfig{"image", "", ""})
 		if err != nil {
 			t.Errorf("got error, shouldn't have: %s", err)
 		}
