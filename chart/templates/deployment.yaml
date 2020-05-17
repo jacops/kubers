@@ -39,6 +39,5 @@ spec:
             - name: AGENT_INJECT_TLS_AUTO_HOSTS
               value: "{{ template "kubers.serviceName" . }},{{ template "kubers.serviceName" . }}.$(NAMESPACE),{{ template "kubers.serviceName" . }}.$(NAMESPACE).svc"
           args:
-            - injector
-            - admission-server
+            - webhook
             - 2>&1

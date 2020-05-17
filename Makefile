@@ -71,6 +71,9 @@ k8s-clean:
 sleep3:
 	@sleep 3
 
+helm-package:
+	helm package chart --destination dist
+
 k8s-all-restart: k8s-all
 	@$(MAKE) k8s-restart-injector
 	@sleep 5
