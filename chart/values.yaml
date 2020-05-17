@@ -1,0 +1,22 @@
+image:
+  repository: docker.io/jacops/kubersctl
+  tag: v0.2.0
+  pullPolicy: IfNotPresent
+
+rbac:
+  enabled: true
+
+injector:
+  serviceAccount:
+    create: true
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name:
+  resources:
+  # If you do want to specify resource limits, uncomment the following and adjust values
+  # limits:
+  #  cpu: 100m
+  #  memory: 628Mi
+    requests:
+      cpu: 50m
+      memory: 64Mi

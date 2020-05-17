@@ -25,20 +25,20 @@ kubectl apply -k git@github.com:jacops/kubers.git//deploy
    ```
    kubers.jacops.pl/agent-inject: "true"
    ```
-2. Set agent driver by adding the following annotation:
+2. Set agent driver by adding the following annotation (for example `azure`):
    ```
-   kubers.jacops.pl/agent-driver: "<azure-aws-or-other>"
+   kubers.jacops.pl/agent-driver: "<driver-name>"
    ```
    > This annotation can be optional if the driver is set globally in the `kubers` deployment.
 
 3. To configure secret injection, please add the following annotation:
 
    ```
-   kubers.jacops.pl/agent-inject-secret-<unique-name>: "<driver-name>://[<service-name>/]<key-name>"
+   kubers.jacops.pl/agent-inject-secret-<unique-name>: "<service-type>://[<service-name>/]<key-name>"
    ```
    * `unique-name` - the filename of the rendered secret and must be unique if multiple secrets are defined by  the user.
-   * `driver-name` - Name of a driver used for retrieving the secret
-   * `service-name` (optional) - Name of a remote service where the secret is stored.
+   * `service-type` - Type of a service used for retrieving the secret. For example: `keyvault`
+   * `service-name` (optional for some services) - Name of a remote service where the secret is stored.
    * `key-name` - Key name under which the secret is stored in the remote service.
 
 Deployment example:

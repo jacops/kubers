@@ -9,7 +9,7 @@ webhooks:
   - name: kubers.jacops.pl
     clientConfig:
       service:
-        name: kubers
+        name: webhook
         path: "/mutate"
         namespace: "kubers-agent-injector"
       caBundle: ""

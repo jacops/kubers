@@ -1,0 +1,23 @@
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: {{ template "kubers.fullname" . }}-cfg
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ template "kubers.name" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    helm.sh/chart: {{ template "kubers.chart" . }}
+webhooks:
+  - name: kubers.jacops.pl
+    clientConfig:
+      service:
+        name: {{ template "kubers.serviceName" . }}
+        path: "/mutate"
+        namespace: {{ .Release.Namespace }}
+      caBundle: ""
+    rules:
+      - operations: ["CREATE"]
+        apiGroups: [""]
+        apiVersions: ["v1"]
+        resources: ["pods"]

@@ -35,4 +35,4 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: kubers
-    namespace: azurekv-agent-injector
+    namespace: kubers-agent-injector

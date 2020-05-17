@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "kubers.serviceName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: {{ template "kubers.name" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    helm.sh/chart: {{ template "kubers.chart" . }}
+spec:
+  ports:
+    - port: 443
+      targetPort: 8080
+  selector:
+    app.kubernetes.io/name: {{ template "kubers.name" . }}
