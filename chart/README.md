@@ -3,7 +3,7 @@
 ## Installing the Chart
 Add the Flux repo:
 ```
-helm repo add jacops https://charts.jacops.pl
+helm repo add jacops https://jacops.github.io/helm-charts/
 ```
 
 ### Install the chart with the release name `kubers`
