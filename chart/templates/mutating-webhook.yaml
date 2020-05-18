@@ -15,7 +15,7 @@ webhooks:
         name: {{ template "kubers.serviceName" . }}
         path: "/mutate"
         namespace: {{ .Release.Namespace }}
-      caBundle: ""
+      caBundle: "{{ .Values.injector.webhook.caBundle }}"
     rules:
       - operations: ["CREATE", "UPDATE"]
         apiGroups: [""]

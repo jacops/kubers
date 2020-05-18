@@ -38,6 +38,7 @@ helm repo add jacops https://jacops.github.io/helm-charts/
 | `injector.resources.limits` | `None` | CPU/memory resource limits for the Flux deployment |
 | `injector.webhook.port` | `8080` | Address to bind listener to |
 | `injector.webhook.tls.auto` | `true` | Should the self-signed certs be used for the mutation webhook |
-| `injector.webhook.tls.certFile` | `` | PEM-encoded TLS certificate to serve. |
+| `injector.webhook.tls.caBundle` | `` | CA bundle for webhook. Should be used in conjunction with `certFile` and `keyFile` |
+| `injector.webhook.tls.certFile` | `` | PEM-encoded TLS certificate to serve |
 | `injector.webhook.tls.keyFile` | `` | PEM-encoded TLS private key to serve |
 | `rbac.enabled` | `true` | If `true`, create and use RBAC resources |
