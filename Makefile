@@ -48,6 +48,10 @@ k8s-deploy-kubers:
 		--set agent.image.tag=$(IMAGE_TAG) \
     --wait --namespace kubers ./chart
 
+k8s-deploy-kubers-release:
+	helm upgrade -i kubers jacops/kubers \
+	   --wait --namespace kubers
+
 k8s-deploy-example-azure:
 	examples/nginx-basic-auth/azure/keyvault-with-sp/deploy/kustomize.sh | kubectl apply -f -
 
