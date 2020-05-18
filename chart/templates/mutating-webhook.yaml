@@ -17,7 +17,7 @@ webhooks:
         namespace: {{ .Release.Namespace }}
       caBundle: ""
     rules:
-      - operations: ["CREATE"]
+      - operations: ["CREATE", "UPDATE"]
         apiGroups: [""]
         apiVersions: ["v1"]
-        resources: ["pods"]
+        resources: ["deployments", "jobs", "pods", "statefulsets"]

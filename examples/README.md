@@ -9,6 +9,6 @@ Below is a list of `Make` tasks available from the root directory of this projec
 
 * `make minikube`
 * `make k8s-deploy` - install `kubers`
-* `make k8s-deploy-example` - deploy example with Azure SP from Terraform templates
+* `make k8s-deploy-example` - deploy example with outputs from Terraform
 
 And many more

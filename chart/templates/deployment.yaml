@@ -29,15 +29,35 @@ spec:
                 fieldRef:
                   fieldPath: metadata.namespace
             - name: AGENT_INJECT_LISTEN
-              value: ":8080"
+              value: ":{{ .Values.injector.webhook.port }}"
             - name: AGENT_INJECT_LOG_LEVEL
-              value: "debug"
+              value: "{{ .Values.injector.log.level }}"
+            - name: AGENT_INJECT_AGENT_IMAGE
+              value: "{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}"
             - name: AGENT_INJECT_LOG_FORMAT
-              value: "standard"
+              value: "{{ .Values.injector.log.format }}"
+            {{- if .Values.injector.webhook.tls.auto }}
             - name: AGENT_INJECT_TLS_AUTO
-              value: kubers-cfg
+              value: {{ template "kubers.fullname" . }}-cfg
             - name: AGENT_INJECT_TLS_AUTO_HOSTS
               value: "{{ template "kubers.serviceName" . }},{{ template "kubers.serviceName" . }}.$(NAMESPACE),{{ template "kubers.serviceName" . }}.$(NAMESPACE).svc"
+            {{- end }}
+            {{- if .Values.injector.webhook.tls.certFile }}
+            - name: AGENT_INJECT_TLS_CERT_FILE
+              value: {{ .Values.injector.webhook.tls.certFile }}
+            {{- end }}
+            {{- if .Values.injector.webhook.tls.keyFile }}
+            - name: AGENT_INJECT_TLS_KEY_FILE
+              value: {{ .Values.injector.webhook.tls.keyFile }}
+            {{- end }}
+            {{- if .Values.agent.driver.name }}
+            - name: AGENT_INJECT_AGENT_DRIVER
+              value: {{ .Values.agent.driver.name }}
+            {{- end }}
+            {{- if .Values.agent.driver.aws.region }}
+            - name: AGENT_INJECT_AGENT_DRIVER_AWS_REGION
+              value: {{ .Values.agent.aws.region }}
+            {{- end }}
           args:
             - webhook
             - 2>&1

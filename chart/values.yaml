@@ -6,6 +6,9 @@ injector:
     repository: docker.io/jacops/kubersd
     tag: v0.3.0
     pullPolicy: IfNotPresent
+  log:
+    level: info
+    format: standard
   serviceAccount:
     create: true
     # The name of the service account to use.
@@ -19,3 +22,19 @@ injector:
     requests:
       cpu: 50m
       memory: 64Mi
+  webhook:
+    port: 8080
+    tls:
+      auto: true
+      keyFile:
+      certFile:
+
+agent:
+  driver:
+    name:
+    aws:
+      region:
+        
+  image:
+    repository: docker.io/jacops/kubers-agent
+    tag: v0.3.0

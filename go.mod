@@ -17,6 +17,7 @@ require (
 	github.com/alecthomas/gometalinter v3.0.0+incompatible // indirect
 	github.com/alecthomas/units v0.0.0-20190924025748-f65c72e2690d // indirect
 	github.com/alexkohler/nakedret v1.0.0 // indirect
+	github.com/aws/aws-sdk-go v1.25.41
 	github.com/bombsimon/wsl/v3 v3.1.0 // indirect
 	github.com/fatih/gomodifytags v1.4.0 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect

@@ -3,7 +3,6 @@ package driver
 import (
 	"context"
 	"fmt"
-	"net/url"
 
 	"github.com/Azure/azure-sdk-for-go/services/keyvault/2016-10-01/keyvault"
 	"github.com/Azure/azure-sdk-for-go/services/keyvault/auth"
@@ -52,15 +51,6 @@ func (azureDriver *AzureDriver) getSecretFromKeyVault(ctx context.Context, secre
 	azureDriver.logger.Debug(fmt.Sprintf("Fetched secret %s from %s", keyName, keyVaultName))
 
 	return *secretBundle.Value, nil
-}
-
-func getServiceTypeFromURL(secretURL string) string {
-	u, err := url.Parse(secretURL)
-	if err != nil {
-		return ""
-	}
-
-	return u.Scheme
 }
 
 func getVaultURL(keyVaultName string) string {

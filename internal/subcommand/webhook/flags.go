@@ -38,11 +38,11 @@ type Specification struct {
 	// AgentImage is the AGENT_IMAGE environment variable.
 	AgentImage string `envconfig:"agent_image"`
 
-	// AgentDriver is the AGENT_DRIVER environment variable.
+	// AgentDriver is the AGENT_INJECT_AGENT_DRIVER environment variable.
 	AgentDriver string `envconfig:"agent_driver"`
 
-	// AgentImage is the AGENT_IMAGE environment variable.
-	AWSRegion string `envconfig:"aws_region"`
+	// AgentImage is the AGENT_INJECT_AGENT_DRIVER_AWS_REGION environment variable.
+	AWSRegion string `envconfig:"driver_aws_region"`
 }
 
 func (c *Command) init() {

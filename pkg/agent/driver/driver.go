@@ -24,9 +24,20 @@ func New(name string, config *Config, logger hclog.Logger) (Driver, error) {
 	switch name {
 	case "azure":
 		return newAzureDriver(config, logger), nil
+	case "aws":
+		return newAWSDriver(config, logger), nil
 	}
 
 	return secretDriver, fmt.Errorf("Driver not found: %s", name)
+}
+
+func getServiceTypeFromURL(secretURL string) string {
+	u, err := url.Parse(secretURL)
+	if err != nil {
+		return ""
+	}
+
+	return u.Scheme
 }
 
 func getServiceKeyNamesPair(secretURL string) (serviceName string, keyName string, err error) {
@@ -37,6 +48,17 @@ func getServiceKeyNamesPair(secretURL string) (serviceName string, keyName strin
 
 	serviceName = strings.Trim(u.Host, "/")
 	keyName = strings.Trim(u.Path, "/")
+
+	return
+}
+
+func getKeyName(secretURL string) (keyName string, err error) {
+	u, err := url.Parse(secretURL)
+	if err != nil {
+		return
+	}
+
+	keyName = strings.Trim(u.Host, "/")
 
 	return
 }

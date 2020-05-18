@@ -62,28 +62,54 @@ func (a *AgentInjector) ContainerEnvVars(init bool) ([]corev1.EnvVar, error) {
 	})
 
 	if credentialsSecret, ok := a.Annotations[AnnotationAgentDriverAzureCredentialsSecret]; ok {
-		envs = append(envs, corev1.EnvVar{
-			Name:      "AZURE_TENANT_ID",
-			ValueFrom: getEnvVarFromSecret(credentialsSecret, "tenantId"),
-		})
-
-		envs = append(envs, corev1.EnvVar{
-			Name:      "AZURE_SUBSCRIPTION_ID",
-			ValueFrom: getEnvVarFromSecret(credentialsSecret, "subscriptionId"),
-		})
-
-		envs = append(envs, corev1.EnvVar{
-			Name:      "AZURE_CLIENT_ID",
-			ValueFrom: getEnvVarFromSecret(credentialsSecret, "clientId"),
-		})
-
-		envs = append(envs, corev1.EnvVar{
-			Name:      "AZURE_CLIENT_SECRET",
-			ValueFrom: getEnvVarFromSecret(credentialsSecret, "clientSecret"),
-		})
+		envs = append(envs, getAzureCredentialsEnvs(credentialsSecret)...)
+	} else if credentialsSecret, ok := a.Annotations[AnnotationAgentDriverAWSCredentialsSecret]; ok {
+		envs = append(envs, getAWSCredentialsEnvs(credentialsSecret)...)
 	}
 
 	return envs, nil
+}
+
+func getAzureCredentialsEnvs(credentialsSecret string) []corev1.EnvVar {
+	var envs []corev1.EnvVar
+
+	envs = append(envs, corev1.EnvVar{
+		Name:      "AZURE_TENANT_ID",
+		ValueFrom: getEnvVarFromSecret(credentialsSecret, "tenantId"),
+	})
+
+	envs = append(envs, corev1.EnvVar{
+		Name:      "AZURE_SUBSCRIPTION_ID",
+		ValueFrom: getEnvVarFromSecret(credentialsSecret, "subscriptionId"),
+	})
+
+	envs = append(envs, corev1.EnvVar{
+		Name:      "AZURE_CLIENT_ID",
+		ValueFrom: getEnvVarFromSecret(credentialsSecret, "clientId"),
+	})
+
+	envs = append(envs, corev1.EnvVar{
+		Name:      "AZURE_CLIENT_SECRET",
+		ValueFrom: getEnvVarFromSecret(credentialsSecret, "clientSecret"),
+	})
+
+	return envs
+}
+
+func getAWSCredentialsEnvs(credentialsSecret string) []corev1.EnvVar {
+	var envs []corev1.EnvVar
+
+	envs = append(envs, corev1.EnvVar{
+		Name:      "AWS_ACCESS_KEY_ID",
+		ValueFrom: getEnvVarFromSecret(credentialsSecret, "accessKeyId"),
+	})
+
+	envs = append(envs, corev1.EnvVar{
+		Name:      "AWS_SECRET_ACCESS_KEY",
+		ValueFrom: getEnvVarFromSecret(credentialsSecret, "secretAccessKey"),
+	})
+
+	return envs
 }
 
 func getEnvVarFromSecret(credentialsSecret string, key string) *corev1.EnvVarSource {

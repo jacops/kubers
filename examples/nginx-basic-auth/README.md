@@ -1,5 +1,6 @@
 # Nginx Basic Auth Example
 This is a simple demonstration of how `kubers` can be leveraged to protect a website served by `nginx`.
+If you are using the provided Terraform scripts, the credentials to access example website are: `test:test`
 
 ## Prerequisites
 * Kubernetes cluster
@@ -14,19 +15,40 @@ Instructions on how to integrate this example with some of the secret stores.
 #### Service Principal method
 This is a default integration for this example.
 
-##### No prior infrastructure
-Before deploying the example, make sure you have provisioned infrastructure from `./azure/keyvault-with-sp`
-This will also create `kustomize` patches for easier example deployment.
+```
+KEY_VAULT_NAME=xxx \
+KEY_VAULT_KEY=xxx \
+ARM_TENANT_ID=xxx \
+ARM_SUBSCRIPTION_ID=xxx \
+ARM_CLIENT_ID=xxx \
+ARM_CLIENT_SECRET=xxx \
+kubectl kustomize azure/keyvault-with-sp/deploy | envsubst | kubectl apply -f -
+```
+
+If you don't have required infrastructure provisioned, you can use the terraform scripts from `azure/keyvault-with-sp` directory.
+
+Running the command below will automatically substitute environmental variables in yaml files:
 
 ```
-kubectl apply -k azure/keyvault-with-sp/dist`
+./azure/keyvault-with-sp/deploy/kustomize.sh | kubectl apply -f -
 ```
 
-##### Existing KeyVault and service principal
-Before deploying the example, make sure you have:
-* changed the annotation in `deploy/deployment.yaml` to match your existing KeyVault name.
-* created a secret called `nginx-sp-creds` in the deployment namespace.
+### AWS Secret Manager
+
+#### API Access Keys method
+This is a default integration for this example.
 
 ```
-kubectl apply -k deploy/
+NGINX_HTPASSWD_SECRET_MANAGER_KEY=xxx \
+AWS_ACCESS_KEY_ID=xxx \
+AWS_SECRET_ACCESS_KEY=xxx \
+kubectl kustomize aws/secretmanager-with-user/deploy | envsubst | kubectl apply -f -
+```
+
+If you don't have required infrastructure provisioned, you can use the terraform scripts from `aws/secretmanager-with-user` directory.
+
+Running the command below will automatically substitute environmental variables in yaml files:
+
+```
+./aws/secretmanager-with-user/deploy/kustomize.sh | kubectl apply -f -
 ```

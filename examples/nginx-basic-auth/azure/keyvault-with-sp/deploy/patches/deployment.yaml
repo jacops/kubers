@@ -1,0 +1,11 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  template:
+    metadata:
+      annotations:
+        kubers.jacops.pl/agent-driver: "azure"
+        kubers.jacops.pl/agent-driver-azure-credentials-secret: "nginx-sp-credentials"
+        kubers.jacops.pl/agent-inject-secret-htpasswd: "keyvault://${KEY_VAULT_NAME}/${KEY_VAULT_KEY}"

@@ -12,12 +12,13 @@ Kubers is a simple implementation of a SecOps pattern, where a sidecar or init c
 
 ## Supported drivers and services
 * Azure (KeyVault)
+* AWS (Secret Manager)
 
 ## Installation
 
 ### Kustomize
 ```
-kubectl apply -k git@github.com:jacops/kubers.git//deploy
+kubectl apply -k git@github.com:jacops/kubers.git
 ```
 
 ### Helm
@@ -64,8 +65,10 @@ Below is a table containing other kubers annotations.
 
 | Annotation | Description |
 |---|---|
-| `kubers.jacops.pl/agent-driver-azure-credentials-secret` | Secret with Azure credentials. See `Authentication` section for more info |
-| `kubers.jacops.pl/agent-image` | Overrides a default docker image for an agent |
+| `kubers.jacops.pl/agent-driver-azure-credentials-secret` | Secret with Azure credentials. See `Authentication` section for more info. |
+| `kubers.jacops.pl/agent-driver-aws-credentials-secret` | Secret with AWS credentials. See `Authentication` section for more info. |
+| `kubers.jacops.pl/agent-driver-aws-region` | AWS Region. Optional if region is set globally. |
+| `kubers.jacops.pl/agent-image` | Overrides a default docker image for an agent. |
 | `kubers.jacops.pl/secret-volume-path` | Specifies where the secrets are to be mounted after fetching. |
 | `kubers.jacops.pl/secret-volume-path-<unique-name>` | Specifies where the `<unique-name>` secret is going to be mounted after fetching. |
 | `kubers.jacops.pl/preserve-secret-case` | If enabled will preserve the case of secret name. By default the name is converted to lower case. |
@@ -108,6 +111,33 @@ data:
 ```
 > The agent injector supplies the sp credentials to the sidecar via environmental variables.
 > While this is not the greatest method, it works well with `azure-sdk-for-go`. This however, can be refactored in the future.
+
+### AWS
+There are two ways to authenticate against AWS Secret Manager. API Access Keys and IAM role.
+
+#### IAM role (recommended)
+This authentication method is recommended as it doesn't require a user to distribute API access keys and worry about rotation and access to them.
+
+To use `kubers` with IAM roles, a user needs to install an application like: https://github.com/jtblin/kube2iam.
+
+No extra configuration is needed on `kubers` side.
+
+#### API Access Keys
+This method requires you to create a pair of API access keys and a Kubernetes secret with the credentials, using which the sidecar container can authenticate itself against a Secret Manager.
+
+Using API Access Keys is not recommended and should be only used in development or if you are in a non AWS environment.
+
+To configure `kubers` agent to use API Access Keys for authentication, please add the following annotation to your pod:
+```
+kubers.jacops.pl/agent-driver-aws-credentials-secret: "<secret-name>"
+```
+
+`<secret-name>` secret should be structured as below:
+```yaml
+data:
+  accessKeyId: xxx
+  secretAccessKey: xxx
+```
 
 ## Examples
 

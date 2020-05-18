@@ -42,11 +42,17 @@ docker-push-%:
 
 docker-push: docker-push-kubersd docker-push-kubers-agent
 
-k8s-deploy:
-	kubectl apply -k deploy
+k8s-deploy-kubers:
+	helm upgrade --devel -i kubers \
+		--set injector.image.tag=$(IMAGE_TAG) \
+		--set agent.image.tag=$(IMAGE_TAG) \
+    --wait --namespace kubers ./chart
 
-k8s-deploy-example:
-	kubectl apply -k examples/nginx-basic-auth/azure/keyvault-with-sp/dist
+k8s-deploy-example-azure:
+	examples/nginx-basic-auth/azure/keyvault-with-sp/deploy/kustomize.sh | kubectl apply -f -
+
+k8s-deploy-example-aws:
+	examples/nginx-basic-auth/aws/secretmanager-with-user/deploy/kustomize.sh | kubectl apply -f -
 
 k8s-restart-example:
 	kubectl rollout restart deployment nginx
@@ -56,17 +62,24 @@ k8s-restart-injector:
 
 k8s-restart-all: k8s-restart-injector sleep3 k8s-restart-example
 
-k8s-all: docker-build k8s-deploy k8s-deploy-example
+k8s-all-azure: docker-build k8s-deploy-kubers k8s-deploy-example-azure
+
+k8s-all-aws: docker-build k8s-deploy-kubers k8s-deploy-example-aws
 
 k8s-logs:
 	kubectl logs -f $(shell kubectl get pod -l app.kubernetes.io/name=kubers -o jsonpath="{.items[-1:].metadata.name}" --sort-by=.status.startTime)
 
 k8s-logs-example:
-		kubectl logs -f $(shell kubectl get pod -l name=nginx -o jsonpath="{.items[-1:].metadata.name}" --sort-by=.status.startTime)
+	kubectl logs -f $(shell kubectl get pod -l name=nginx -o jsonpath="{.items[-1:].metadata.name}" --sort-by=.status.startTime)
 
-k8s-clean:
-	kubectl delete -k examples/terraform/azure/keyvault-with-sp/dist
-	kubectl delete -k deploy
+k8s-clean-kubers:
+	helm delete kubers || true
+
+k8s-clean-aws:
+	examples/nginx-basic-auth/aws/secretmanager-with-user/deploy/kustomize.sh | kubectl delete -f -
+
+k8s-clean-azure:
+	examples/nginx-basic-auth/azure/keyvault-with-sp/deploy/kustomize.sh | kubectl delete -f -
 
 sleep3:
 	@sleep 3

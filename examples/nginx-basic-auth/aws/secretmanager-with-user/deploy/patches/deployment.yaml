@@ -1,0 +1,12 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+spec:
+  template:
+    metadata:
+      annotations:
+        kubers.jacops.pl/agent-driver: "aws"
+        kubers.jacops.pl/agent-driver-aws-region: "eu-west-2"
+        kubers.jacops.pl/agent-driver-aws-credentials-secret: "nginx-user-credentials"
+        kubers.jacops.pl/agent-inject-secret-htpasswd: "secretmanager://${NGINX_HTPASSWD_SECRET_MANAGER_KEY}"
