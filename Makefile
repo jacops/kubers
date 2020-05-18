@@ -8,6 +8,9 @@ CLUSTER_NAME=kubers
 GOOS=linux
 GOARCH=amd64
 
+show-version:
+	@echo $(IMAGE_TAG)
+
 minikube:
 	@minikube start -p $(CLUSTER_NAME) --insecure-registry "10.0.0.0/24"
 	@kubectl create ns $(NAMESPACE) --dry-run=client --output yaml | kubectl apply -f -
@@ -34,13 +37,21 @@ clean:
 
 docker-build-%: build-%
 	docker build -f docker/Dockerfile.$* -t $(IMAGE_PREFIX)$*:$(IMAGE_TAG) .
+	docker tag $(IMAGE_PREFIX)$*:$(IMAGE_TAG) $(IMAGE_PREFIX)$*:latest
 
 docker-build: docker-build-kubersd docker-build-kubers-agent
 
 docker-push-%:
 	docker push $(IMAGE_PREFIX)$*:$(IMAGE_TAG)
+	docker push $(IMAGE_PREFIX)$*:latest
 
 docker-push: docker-push-kubersd docker-push-kubers-agent
+
+generate-deployment-manifests:
+	helm template kubers \
+		--set injector.image.tag=latest \
+		--set agent.image.tag=latest \
+    --namespace kubers ./chart > ./deploy/kubers.yaml
 
 k8s-deploy-kubers:
 	helm upgrade --devel -i kubers \
