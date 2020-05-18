@@ -15,7 +15,7 @@ function tf_value_base64() {
   printf "%s" $(terraform output $1) | base64
 }
 
-export NGINX_HTPASSWD_SECRET_MANAGER_KEY=$(tf_value "nginx_htpasswd_secret_name")
+export NGINX_HTPASSWD_SECRETS_MANAGER_KEY=$(tf_value "nginx_htpasswd_secret_name")
 export AWS_ACCESS_KEY_ID=$(tf_value_base64 "nginx_identity_access_key_id")
 export AWS_SECRET_ACCESS_KEY=$(tf_value_base64 "nginx_identity_secret_access_key")
 

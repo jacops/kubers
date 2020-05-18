@@ -33,22 +33,22 @@ Running the command below will automatically substitute environmental variables 
 ./azure/keyvault-with-sp/deploy/kustomize.sh | kubectl apply -f -
 ```
 
-### AWS Secret Manager
+### AWS Secrets Manager
 
 #### API Access Keys method
 This is a default integration for this example.
 
 ```
-NGINX_HTPASSWD_SECRET_MANAGER_KEY=xxx \
+NGINX_HTPASSWD_SECRETS_MANAGER_KEY=xxx \
 AWS_ACCESS_KEY_ID=xxx \
 AWS_SECRET_ACCESS_KEY=xxx \
-kubectl kustomize aws/secretmanager-with-user/deploy | envsubst | kubectl apply -f -
+kubectl kustomize aws/secretsmanager-with-user/deploy | envsubst | kubectl apply -f -
 ```
 
-If you don't have required infrastructure provisioned, you can use the terraform scripts from `aws/secretmanager-with-user` directory.
+If you don't have required infrastructure provisioned, you can use the terraform scripts from `aws/secretsmanager-with-user` directory.
 
 Running the command below will automatically substitute environmental variables in yaml files:
 
 ```
-./aws/secretmanager-with-user/deploy/kustomize.sh | kubectl apply -f -
+./aws/secretsmanager-with-user/deploy/kustomize.sh | kubectl apply -f -
 ```

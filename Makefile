@@ -67,7 +67,7 @@ k8s-deploy-example-azure:
 	examples/nginx-basic-auth/azure/keyvault-with-sp/deploy/kustomize.sh | kubectl apply -f -
 
 k8s-deploy-example-aws:
-	examples/nginx-basic-auth/aws/secretmanager-with-user/deploy/kustomize.sh | kubectl apply -f -
+	examples/nginx-basic-auth/aws/secretsmanager-with-user/deploy/kustomize.sh | kubectl apply -f -
 
 k8s-restart-example:
 	kubectl rollout restart deployment nginx
@@ -91,7 +91,7 @@ k8s-clean-kubers:
 	helm delete kubers || true
 
 k8s-clean-aws:
-	examples/nginx-basic-auth/aws/secretmanager-with-user/deploy/kustomize.sh | kubectl delete -f -
+	examples/nginx-basic-auth/aws/secretsmanager-with-user/deploy/kustomize.sh | kubectl delete -f -
 
 k8s-clean-azure:
 	examples/nginx-basic-auth/azure/keyvault-with-sp/deploy/kustomize.sh | kubectl delete -f -

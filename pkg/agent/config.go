@@ -3,7 +3,7 @@ package agent
 import (
 	"encoding/json"
 
-	"github.com/jacops/kubers/pkg/agent/driver"
+	"github.com/jacops/kubers/pkg/driver"
 )
 
 // Config is the top level struct that composes am Agent

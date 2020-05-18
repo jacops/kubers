@@ -12,7 +12,7 @@ Kubers is a simple implementation of a SecOps pattern, where a sidecar or init c
 
 ## Supported drivers and services
 * Azure (KeyVault)
-* AWS (Secret Manager)
+* AWS (Secrets Manager)
 
 ## Installation
 
@@ -77,7 +77,7 @@ Below is a table containing other kubers annotations.
 
 ## Authentication
 
-Every secret manager service requires a user to authenticate against. While this responsibility is offloaded from your application, the sidecar container still needs to do this.
+Every secrets manager service requires a user to authenticate against. While this responsibility is offloaded from your application, the sidecar container still needs to do this.
 
 Below is the guide on how to authenticate against different service providers.
 
@@ -113,7 +113,7 @@ data:
 > While this is not the greatest method, it works well with `azure-sdk-for-go`. This however, can be refactored in the future.
 
 ### AWS
-There are two ways to authenticate against AWS Secret Manager. API Access Keys and IAM role.
+There are two ways to authenticate against AWS Secrets Manager. API Access Keys and IAM role.
 
 #### IAM role (recommended)
 This authentication method is recommended as it doesn't require a user to distribute API access keys and worry about rotation and access to them.
@@ -123,7 +123,7 @@ To use `kubers` with IAM roles, a user needs to install an application like: htt
 No extra configuration is needed on `kubers` side.
 
 #### API Access Keys
-This method requires you to create a pair of API access keys and a Kubernetes secret with the credentials, using which the sidecar container can authenticate itself against a Secret Manager.
+This method requires you to create a pair of API access keys and a Kubernetes secret with the credentials, using which the sidecar container can authenticate itself against a secrets Manager.
 
 Using API Access Keys is not recommended and should be only used in development or if you are in a non AWS environment.
 

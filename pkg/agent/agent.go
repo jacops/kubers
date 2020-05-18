@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/hashicorp/go-hclog"
-	"github.com/jacops/kubers/pkg/agent/driver"
+	"github.com/jacops/kubers/pkg/driver"
 )
 
 // Agent struct represnts the init continer
@@ -19,7 +19,7 @@ type Agent struct {
 
 // New returns new Agent with writeSecretToMountPath
 func New(config *Config, logger hclog.Logger) (*Agent, error) {
-	secretDriver, err := driver.New(config.DriverName, config.DriverConfig, logger)
+	secretDriver, err := newDriver(config.DriverName, config.DriverConfig, logger)
 	if err != nil {
 		return nil, err
 	}

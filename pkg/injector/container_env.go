@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/jacops/kubers/pkg/agent"
-	"github.com/jacops/kubers/pkg/agent/driver"
+	"github.com/jacops/kubers/pkg/driver"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/api/core/v1"
 )
