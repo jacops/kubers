@@ -4,7 +4,7 @@ rbac:
 injector:
   image:
     repository: docker.io/jacops/kubersd
-    tag: v0.4.1
+    tag: v0.5.0
     pullPolicy: IfNotPresent
   log:
     level: info
@@ -38,4 +38,4 @@ agent:
 
   image:
     repository: docker.io/jacops/kubers-agent
-    tag: v0.4.1
+    tag: v0.5.0
