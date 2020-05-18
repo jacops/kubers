@@ -31,7 +31,7 @@ injector:
       certFile:
 
 agent:
-  driver:
+  provider:
     name:
     aws:
       region:

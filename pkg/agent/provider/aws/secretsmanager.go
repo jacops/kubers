@@ -6,7 +6,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/secretsmanager"
-	"github.com/jacops/kubers/pkg/driver"
+	"github.com/jacops/kubers/pkg/provider"
 )
 
 type secretsManager struct {
@@ -15,7 +15,7 @@ type secretsManager struct {
 }
 
 func newSecretsManager(secretURL string, sess *session.Session) *secretsManager {
-	keyName, _ := driver.GetKeyName(secretURL)
+	keyName, _ := provider.GetKeyName(secretURL)
 
 	return &secretsManager{
 		key:     keyName,

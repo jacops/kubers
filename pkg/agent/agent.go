@@ -6,29 +6,29 @@ import (
 	"time"
 
 	"github.com/hashicorp/go-hclog"
-	"github.com/jacops/kubers/pkg/driver"
+	"github.com/jacops/kubers/pkg/provider"
 )
 
 // Agent struct represnts the init continer
 type Agent struct {
-	config *Config
-	logger hclog.Logger
-	writer SecretsWriter
-	driver driver.Driver
+	config   *Config
+	logger   hclog.Logger
+	writer   SecretsWriter
+	provider provider.Provider
 }
 
 // New returns new Agent with writeSecretToMountPath
 func New(config *Config, logger hclog.Logger) (*Agent, error) {
-	secretDriver, err := newDriver(config.DriverName, config.DriverConfig, logger)
+	secretProvider, err := newProvider(config.ProviderName, config.ProviderConfig, logger)
 	if err != nil {
 		return nil, err
 	}
 
 	return &Agent{
-		config: config,
-		logger: logger,
-		writer: NewMountPathWriter(logger),
-		driver: secretDriver,
+		config:   config,
+		logger:   logger,
+		writer:   NewMountPathWriter(logger),
+		provider: secretProvider,
 	}, nil
 }
 
@@ -45,7 +45,7 @@ func (a *Agent) Retrieve() (err error) {
 				errorChannel <- err
 			}()
 
-			secret, err := a.driver.GetSecret(ctx, secretMetadata.URL)
+			secret, err := a.provider.GetSecret(ctx, secretMetadata.URL)
 			if err != nil {
 				return
 			}

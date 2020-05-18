@@ -10,7 +10,7 @@ Kubers is a simple implementation of a SecOps pattern, where a sidecar or init c
 
 ![Diagram](statics/diagram.png)
 
-## Supported drivers and services
+## Supported providers and services
 * Azure (KeyVault)
 * AWS (Secrets Manager)
 
@@ -30,11 +30,11 @@ Please go to `./chart` folder for instructions and available configuration.
    ```
    kubers.jacops.pl/agent-inject: "true"
    ```
-2. Set agent driver by adding the following annotation (for example `azure`):
+2. Set agent provider by adding the following annotation (for example `azure`):
    ```
-   kubers.jacops.pl/agent-driver: "<driver-name>"
+   kubers.jacops.pl/agent-provider: "<provider-name>"
    ```
-   > This annotation can be optional if the driver is set globally in the `kubers` deployment.
+   > This annotation can be optional if the provider is set globally in the `kubers` deployment.
 
 3. To configure secret injection, please add the following annotation:
 
@@ -52,7 +52,7 @@ spec:
   template:
     metadata:
       annotations:
-        kubers.jacops.pl/agent-driver: "azure"
+        kubers.jacops.pl/agent-provider: "azure"
         kubers.jacops.pl/agent-inject: "true"
         kubers.jacops.pl/agent-inject-secret-htpasswd: keyvault://examplekv/nginx-htpasswd
 ```
@@ -65,9 +65,9 @@ Below is a table containing other kubers annotations.
 
 | Annotation | Description |
 |---|---|
-| `kubers.jacops.pl/agent-driver-azure-credentials-secret` | Secret with Azure credentials. See `Authentication` section for more info. |
-| `kubers.jacops.pl/agent-driver-aws-credentials-secret` | Secret with AWS credentials. See `Authentication` section for more info. |
-| `kubers.jacops.pl/agent-driver-aws-region` | AWS Region. Optional if region is set globally. |
+| `kubers.jacops.pl/agent-provider-azure-credentials-secret` | Secret with Azure credentials. See `Authentication` section for more info. |
+| `kubers.jacops.pl/agent-provider-aws-credentials-secret` | Secret with AWS credentials. See `Authentication` section for more info. |
+| `kubers.jacops.pl/agent-provider-aws-region` | AWS Region. Optional if region is set globally. |
 | `kubers.jacops.pl/agent-image` | Overrides a default docker image for an agent. |
 | `kubers.jacops.pl/secret-volume-path` | Specifies where the secrets are to be mounted after fetching. |
 | `kubers.jacops.pl/secret-volume-path-<unique-name>` | Specifies where the `<unique-name>` secret is going to be mounted after fetching. |
@@ -98,7 +98,7 @@ Using service principal is not recommended and should be only used in developmen
 
 To configure kubers agent to use service principal authentication, please add the following annotation to your pod:
 ```
-kubers.jacops.pl/agent-driver-azure-credentials-secret: "<secret-name-of-the-sp-credentials>"
+kubers.jacops.pl/agent-provider-azure-credentials-secret: "<secret-name-of-the-sp-credentials>"
 ```
 
 `secret-name-of-the-sp-credentials` secret should be structured as below:
@@ -129,7 +129,7 @@ Using API Access Keys is not recommended and should be only used in development 
 
 To configure `kubers` agent to use API Access Keys for authentication, please add the following annotation to your pod:
 ```
-kubers.jacops.pl/agent-driver-aws-credentials-secret: "<secret-name>"
+kubers.jacops.pl/agent-provider-aws-credentials-secret: "<secret-name>"
 ```
 
 `<secret-name>` secret should be structured as below:

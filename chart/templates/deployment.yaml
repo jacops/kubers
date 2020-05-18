@@ -50,11 +50,11 @@ spec:
             - name: AGENT_INJECT_TLS_KEY_FILE
               value: {{ .Values.injector.webhook.tls.keyFile }}
             {{- end }}
-            {{- if .Values.agent.driver.name }}
+            {{- if .Values.agent.provider.name }}
             - name: AGENT_INJECT_AGENT_DRIVER
-              value: {{ .Values.agent.driver.name }}
+              value: {{ .Values.agent.provider.name }}
             {{- end }}
-            {{- if .Values.agent.driver.aws.region }}
+            {{- if .Values.agent.provider.aws.region }}
             - name: AGENT_INJECT_AGENT_DRIVER_AWS_REGION
               value: {{ .Values.agent.aws.region }}
             {{- end }}

@@ -38,11 +38,11 @@ type Specification struct {
 	// AgentImage is the AGENT_IMAGE environment variable.
 	AgentImage string `envconfig:"agent_image"`
 
-	// AgentDriver is the AGENT_INJECT_AGENT_DRIVER environment variable.
-	AgentDriver string `envconfig:"agent_driver"`
+	// AgentProvider is the AGENT_INJECT_AGENT_DRIVER environment variable.
+	AgentProvider string `envconfig:"agent_provider"`
 
 	// AgentImage is the AGENT_INJECT_AGENT_DRIVER_AWS_REGION environment variable.
-	AWSRegion string `envconfig:"driver_aws_region"`
+	AWSRegion string `envconfig:"provider_aws_region"`
 }
 
 func (c *Command) init() {
@@ -67,8 +67,8 @@ func (c *Command) init() {
 		fmt.Sprintf("Docker image for Agent. Defaults to %q.", defaultAgentImage))
 	c.flagSet.StringVar(&c.flagAWSRegion, "aws-region", "",
 		fmt.Sprintf("AWS region where secret manager is deployed."))
-	c.flagSet.StringVar(&c.flagAgentDriver, "driver-name", "",
-		fmt.Sprintf("Driver name used to retrieve secrets."))
+	c.flagSet.StringVar(&c.flagAgentProvider, "provider-name", "",
+		fmt.Sprintf("Provider name used to retrieve secrets."))
 
 	c.help = flags.Usage(help, c.flagSet)
 }
@@ -113,8 +113,8 @@ func (c *Command) parseEnvs() error {
 		c.flagAgentImage = envs.AgentImage
 	}
 
-	if envs.AgentDriver != "" {
-		c.flagAgentImage = envs.AgentDriver
+	if envs.AgentProvider != "" {
+		c.flagAgentImage = envs.AgentProvider
 	}
 
 	if envs.AWSRegion != "" {

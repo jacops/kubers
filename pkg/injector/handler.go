@@ -38,7 +38,7 @@ type Handler struct {
 	Clientset         *kubernetes.Clientset
 	Log               hclog.Logger
 	Image             string
-	DriverName        string
+	ProviderName        string
 	AWSRegion         string
 }
 
@@ -136,7 +136,7 @@ func (h *Handler) Mutate(req *v1beta1.AdmissionRequest) *v1beta1.AdmissionRespon
 	var patches []*jsonpatch.JsonPatchOperation
 	cfg := AgentInjectorConfig{
 		Image:      h.Image,
-		DriverName: h.DriverName,
+		ProviderName: h.ProviderName,
 		AWSRegion:  h.AWSRegion,
 	}
 	err = Init(&pod, cfg)

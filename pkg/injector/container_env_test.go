@@ -12,8 +12,8 @@ func TestContainerEnvs(t *testing.T) {
 		agent        AgentInjector
 		expectedEnvs []string
 	}{
-		{AgentInjector{Annotations: map[string]string{AnnotationAgentDriver: "azure"}}, []string{"AGENT_CONFIG"}},
-		{AgentInjector{Annotations: map[string]string{AnnotationAgentDriverAzureCredentialsSecret: "secret", AnnotationAgentDriver: "azure"}}, []string{"AGENT_CONFIG", "AZURE_TENANT_ID", "AZURE_SUBSCRIPTION_ID", "AZURE_CLIENT_ID", "AZURE_CLIENT_SECRET"}},
+		{AgentInjector{Annotations: map[string]string{AnnotationAgentProvider: "azure"}}, []string{"AGENT_CONFIG"}},
+		{AgentInjector{Annotations: map[string]string{AnnotationAgentProviderAzureCredentialsSecret: "secret", AnnotationAgentProvider: "azure"}}, []string{"AGENT_CONFIG", "AZURE_TENANT_ID", "AZURE_SUBSCRIPTION_ID", "AZURE_CLIENT_ID", "AZURE_CLIENT_SECRET"}},
 	}
 	for _, tt := range tests {
 		envs, err := tt.agent.ContainerEnvVars(true)

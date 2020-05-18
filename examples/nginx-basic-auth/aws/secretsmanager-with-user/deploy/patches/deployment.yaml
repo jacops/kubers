@@ -6,7 +6,7 @@ spec:
   template:
     metadata:
       annotations:
-        kubers.jacops.pl/agent-driver: "aws"
-        kubers.jacops.pl/agent-driver-aws-region: "eu-west-2"
-        kubers.jacops.pl/agent-driver-aws-credentials-secret: "nginx-user-credentials"
+        kubers.jacops.pl/agent-provider: "aws"
+        kubers.jacops.pl/agent-provider-aws-region: "eu-west-2"
+        kubers.jacops.pl/agent-provider-aws-credentials-secret: "nginx-user-credentials"
         kubers.jacops.pl/agent-inject-secret-htpasswd: "secretsmanager://${NGINX_HTPASSWD_SECRETS_MANAGER_KEY}"

@@ -5,7 +5,7 @@ import (
 
 	"github.com/Azure/azure-sdk-for-go/services/keyvault/2016-10-01/keyvault"
 	"github.com/Azure/azure-sdk-for-go/services/keyvault/auth"
-	"github.com/jacops/kubers/pkg/driver"
+	"github.com/jacops/kubers/pkg/provider"
 )
 
 type keyVault struct {
@@ -19,7 +19,7 @@ func newKeyVault(secretURL string) *keyVault {
 	client := keyvault.New()
 	client.Authorizer = authorizer
 
-	keyVaultName, keyName, _ := driver.GetServiceKeyNamesPair(secretURL)
+	keyVaultName, keyName, _ := provider.GetServiceKeyNamesPair(secretURL)
 
 	return &keyVault{
 		name:   keyVaultName,

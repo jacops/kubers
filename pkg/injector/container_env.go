@@ -7,42 +7,42 @@ import (
 	"strings"
 
 	"github.com/jacops/kubers/pkg/agent"
-	"github.com/jacops/kubers/pkg/driver"
+	"github.com/jacops/kubers/pkg/provider"
 	corev1 "k8s.io/api/core/v1"
 	v1 "k8s.io/api/core/v1"
 )
 
 func (a *AgentInjector) newConfig() ([]byte, error) {
-	var driverName string
+	var providerName string
 	var renderedConfig []byte
 
-	if _, ok := a.Annotations[AnnotationAgentDriver]; !ok {
-		return renderedConfig, errors.New("Driver not specified")
+	if _, ok := a.Annotations[AnnotationAgentProvider]; !ok {
+		return renderedConfig, errors.New("Provider not specified")
 	}
 
-	driverName = a.Annotations[AnnotationAgentDriver]
+	providerName = a.Annotations[AnnotationAgentProvider]
 
 	agentConfig := agent.Config{
 		Secrets:      a.Secrets,
-		DriverName:   driverName,
-		DriverConfig: a.getDriverConfig(driverName),
+		ProviderName:   providerName,
+		ProviderConfig: a.getProviderConfig(providerName),
 	}
 
 	return agentConfig.Render()
 }
 
-func (a *AgentInjector) getDriverConfig(driverName string) *driver.Config {
-	driverConfig := make(driver.Config)
-	driverConfigAnnotationPrefix := fmt.Sprintf("%s-%s-", AnnotationAgentDriver, driverName)
+func (a *AgentInjector) getProviderConfig(providerName string) *provider.Config {
+	providerConfig := make(provider.Config)
+	providerConfigAnnotationPrefix := fmt.Sprintf("%s-%s-", AnnotationAgentProvider, providerName)
 
 	for name, val := range a.Annotations {
-		if strings.Contains(name, driverConfigAnnotationPrefix) {
-			annotationConfigKey := strings.ReplaceAll(name, driverConfigAnnotationPrefix, "")
-			driverConfig[strings.ReplaceAll(annotationConfigKey, "-", "_")] = val
+		if strings.Contains(name, providerConfigAnnotationPrefix) {
+			annotationConfigKey := strings.ReplaceAll(name, providerConfigAnnotationPrefix, "")
+			providerConfig[strings.ReplaceAll(annotationConfigKey, "-", "_")] = val
 		}
 	}
 
-	return &driverConfig
+	return &providerConfig
 }
 
 // ContainerEnvVars adds the applicable environment vars
@@ -61,9 +61,9 @@ func (a *AgentInjector) ContainerEnvVars(init bool) ([]corev1.EnvVar, error) {
 		Value: b64Config,
 	})
 
-	if credentialsSecret, ok := a.Annotations[AnnotationAgentDriverAzureCredentialsSecret]; ok {
+	if credentialsSecret, ok := a.Annotations[AnnotationAgentProviderAzureCredentialsSecret]; ok {
 		envs = append(envs, getAzureCredentialsEnvs(credentialsSecret)...)
-	} else if credentialsSecret, ok := a.Annotations[AnnotationAgentDriverAWSCredentialsSecret]; ok {
+	} else if credentialsSecret, ok := a.Annotations[AnnotationAgentProviderAWSCredentialsSecret]; ok {
 		envs = append(envs, getAWSCredentialsEnvs(credentialsSecret)...)
 	}
 

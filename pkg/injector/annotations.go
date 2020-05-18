@@ -11,17 +11,17 @@ import (
 )
 
 const (
-	// AnnotationAgentDriver sets a driver for the agent used to retrieve secrets
-	AnnotationAgentDriver = "kubers.jacops.pl/agent-driver"
+	// AnnotationAgentProvider sets a provider for the agent used to retrieve secrets
+	AnnotationAgentProvider = "kubers.jacops.pl/agent-provider"
 
-	// AnnotationAgentDriverAzureCredentialsSecret enables authentication via Azure service principal
-	AnnotationAgentDriverAzureCredentialsSecret = "kubers.jacops.pl/agent-driver-azure-credentials-secret"
+	// AnnotationAgentProviderAzureCredentialsSecret enables authentication via Azure service principal
+	AnnotationAgentProviderAzureCredentialsSecret = "kubers.jacops.pl/agent-provider-azure-credentials-secret"
 
-	// AnnotationAgentDriverAWSCredentialsSecret enables authentication via AWS keys
-	AnnotationAgentDriverAWSCredentialsSecret = "kubers.jacops.pl/agent-driver-aws-credentials-secret"
+	// AnnotationAgentProviderAWSCredentialsSecret enables authentication via AWS keys
+	AnnotationAgentProviderAWSCredentialsSecret = "kubers.jacops.pl/agent-provider-aws-credentials-secret"
 
-	// AnnotationAgentDriverAWSRegion overrides aws region passed to the operator
-	AnnotationAgentDriverAWSRegion = "kubers.jacops.pl/agent-driver-aws-region"
+	// AnnotationAgentProviderAWSRegion overrides aws region passed to the operator
+	AnnotationAgentProviderAWSRegion = "kubers.jacops.pl/agent-provider-aws-region"
 
 	// AnnotationAgentStatus is the key of the annotation that is added to
 	// a pod after an injection is done.
@@ -55,7 +55,7 @@ const (
 // AgentInjectorConfig ...
 type AgentInjectorConfig struct {
 	Image      string
-	DriverName string
+	ProviderName string
 	AWSRegion  string
 }
 
@@ -75,12 +75,12 @@ func Init(pod *corev1.Pod, cfg AgentInjectorConfig) error {
 		pod.ObjectMeta.Annotations[AnnotationVaultSecretVolumePath] = secretVolumePath
 	}
 
-	if _, ok := pod.ObjectMeta.Annotations[AnnotationAgentDriver]; !ok {
-		pod.ObjectMeta.Annotations[AnnotationAgentDriver] = cfg.DriverName
+	if _, ok := pod.ObjectMeta.Annotations[AnnotationAgentProvider]; !ok {
+		pod.ObjectMeta.Annotations[AnnotationAgentProvider] = cfg.ProviderName
 	}
 
-	if _, ok := pod.ObjectMeta.Annotations[AnnotationAgentDriverAWSRegion]; !ok {
-		pod.ObjectMeta.Annotations[AnnotationAgentDriverAWSRegion] = cfg.AWSRegion
+	if _, ok := pod.ObjectMeta.Annotations[AnnotationAgentProviderAWSRegion]; !ok {
+		pod.ObjectMeta.Annotations[AnnotationAgentProviderAWSRegion] = cfg.AWSRegion
 	}
 
 	if _, ok := pod.ObjectMeta.Annotations[AnnotationAgentImage]; !ok {

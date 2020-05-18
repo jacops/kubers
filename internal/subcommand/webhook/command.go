@@ -37,7 +37,7 @@ type Command struct {
 	flagAutoName    string // MutatingWebhookConfiguration for updating
 	flagAutoHosts   string // SANs for the auto-generated TLS cert.
 	flagAgentImage  string // Agent Docker image
-	flagAgentDriver string // Agent Driver
+	flagAgentProvider string // Agent Provider
 
 	flagAWSRegion string // AWS region of Secret Manager
 
@@ -111,7 +111,7 @@ func (c *Command) Run(args []string) int {
 		RequireAnnotation: true,
 		Log:               logger,
 		Image:             c.flagAgentImage,
-		DriverName:        c.flagAgentDriver,
+		ProviderName:        c.flagAgentProvider,
 		AWSRegion:         c.flagAWSRegion,
 	}
 

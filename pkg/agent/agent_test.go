@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/hashicorp/go-hclog"
-	"github.com/jacops/kubers/pkg/driver"
+	"github.com/jacops/kubers/pkg/provider"
 )
 
 func TestAgentCanRetrieveSecrets(t *testing.T) {
@@ -55,20 +55,20 @@ func getBasicAgentWithSecret() *Agent {
 	return &Agent{
 		logger: getLogger(),
 		config: config,
-		driver: &DummyDriver{},
+		provider: &DummyProvider{},
 		writer: NewDummyPathWriter(),
 	}
 }
 
-type DummyDriver struct{}
+type DummyProvider struct{}
 type DummyPathWriter struct{}
 
-func (dd *DummyDriver) GetSecret(ctx context.Context, secretURL string) (string, error) {
+func (dd *DummyProvider) GetSecret(ctx context.Context, secretURL string) (string, error) {
 	return "dummy-secret", nil
 }
 
-func getOnlyDummySecretsDriverFromMapByURL(secretURL string, driverConfig driver.Config) (driver.Driver, error) {
-	return &DummyDriver{}, nil
+func getOnlyDummySecretsProviderFromMapByURL(secretURL string, providerConfig provider.Config) (provider.Provider, error) {
+	return &DummyProvider{}, nil
 }
 
 func (w *DummyPathWriter) WriteSecret(value string, metadata *SecretMetadata) error {
