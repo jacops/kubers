@@ -10,5 +10,6 @@ steps:
 - name: test
   image: golang:1.14
   commands:
-  - make test
+  - make test-coverage
   - make build
+  - bash <(curl -s https://codecov.io/bash)

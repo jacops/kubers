@@ -29,6 +29,9 @@ build: build-kubersd build-kubers-agent
 
 test: unit-test
 
+test-coverage:
+	./scripts/go.test.sh
+
 unit-test:
 	go test -race ./...
 
