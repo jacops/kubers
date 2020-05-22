@@ -73,6 +73,8 @@ Below is a table containing other kubers annotations.
 | `kubers.jacops.pl/secret-volume-path-<unique-name>` | Specifies where the `<unique-name>` secret is going to be mounted after fetching. |
 | `kubers.jacops.pl/preserve-secret-case` | If enabled will preserve the case of secret name. By default the name is converted to lower case. |
 | `kubers.jacops.pl/preserve-secret-case-<unique-name>` | If enabled will preserve the case of `<unique-name>` secret name. By default the name is converted to lower case. |
+| `kubers.jacops.pl/agent-log-level` | Overrides log level for agent. Possible values: `debug`, `info`, `error` |
+| `kubers.jacops.pl/agent-log-format` | Overrides log format for agent. Possible values: `standard`, `json` |
 
 
 ## Authentication
