@@ -56,7 +56,9 @@ generate-deployment-manifests:
 k8s-deploy-kubers:
 	helm upgrade --devel -i kubers \
 		--set injector.image.tag=$(IMAGE_TAG) \
+		--set injector.log.level=debug \
 		--set agent.image.tag=$(IMAGE_TAG) \
+		--set agent.log.level=debug \
     --wait --namespace kubers ./chart
 
 k8s-deploy-kubers-release:

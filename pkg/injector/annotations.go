@@ -23,6 +23,12 @@ const (
 	// AnnotationAgentProviderAWSRegion overrides aws region passed to the operator
 	AnnotationAgentProviderAWSRegion = "kubers.jacops.pl/agent-provider-aws-region"
 
+	// AnnotationAgentLogLevel sets a log level for the agent
+	AnnotationAgentLogLevel = "kubers.jacops.pl/agent-log-level"
+
+	// AnnotationAgentLogFormat sets a log format for the agent
+	AnnotationAgentLogFormat = "kubers.jacops.pl/agent-log-format"
+
 	// AnnotationAgentStatus is the key of the annotation that is added to
 	// a pod after an injection is done.
 	// There's only one valid status we care about: "injected".
@@ -54,15 +60,17 @@ const (
 
 // AgentInjectorConfig ...
 type AgentInjectorConfig struct {
-	Image      string
-	ProviderName string
-	AWSRegion  string
+	Image                  string
+	AgentProviderName      string
+	AgentProviderAWSRegion string
+	LogLevel               string
+	LogFormat              string
 }
 
 // Init configures the expected annotations required to create a new instance
 // of Agent.  This should be run before running new to ensure all annotations are
 // present.
-func Init(pod *corev1.Pod, cfg AgentInjectorConfig) error {
+func Init(pod *corev1.Pod, cfg *AgentInjectorConfig) error {
 	if pod == nil {
 		return errors.New("pod is empty")
 	}
@@ -76,11 +84,19 @@ func Init(pod *corev1.Pod, cfg AgentInjectorConfig) error {
 	}
 
 	if _, ok := pod.ObjectMeta.Annotations[AnnotationAgentProvider]; !ok {
-		pod.ObjectMeta.Annotations[AnnotationAgentProvider] = cfg.ProviderName
+		pod.ObjectMeta.Annotations[AnnotationAgentProvider] = cfg.AgentProviderName
 	}
 
 	if _, ok := pod.ObjectMeta.Annotations[AnnotationAgentProviderAWSRegion]; !ok {
-		pod.ObjectMeta.Annotations[AnnotationAgentProviderAWSRegion] = cfg.AWSRegion
+		pod.ObjectMeta.Annotations[AnnotationAgentProviderAWSRegion] = cfg.AgentProviderAWSRegion
+	}
+
+	if _, ok := pod.ObjectMeta.Annotations[AnnotationAgentLogLevel]; !ok {
+		pod.ObjectMeta.Annotations[AnnotationAgentLogLevel] = cfg.LogLevel
+	}
+
+	if _, ok := pod.ObjectMeta.Annotations[AnnotationAgentLogFormat]; !ok {
+		pod.ObjectMeta.Annotations[AnnotationAgentLogFormat] = cfg.LogFormat
 	}
 
 	if _, ok := pod.ObjectMeta.Annotations[AnnotationAgentImage]; !ok {

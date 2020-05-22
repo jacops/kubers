@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/name: kubers
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: kubers
-    helm.sh/chart: kubers-1.1.0
+    helm.sh/chart: kubers-1.1.2
 ---
 # Source: kubers/templates/rbac.yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -21,7 +21,7 @@ metadata:
     app.kubernetes.io/name: kubers
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: kubers
-    helm.sh/chart: kubers-1.1.0
+    helm.sh/chart: kubers-1.1.2
 rules:
   - apiGroups: ["admissionregistration.k8s.io"]
     resources: ["mutatingwebhookconfigurations"]
@@ -40,7 +40,7 @@ metadata:
     app.kubernetes.io/name: kubers
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: kubers
-    helm.sh/chart: kubers-1.1.0
+    helm.sh/chart: kubers-1.1.2
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
@@ -60,7 +60,7 @@ metadata:
     app.kubernetes.io/name: kubers
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: kubers
-    helm.sh/chart: kubers-1.1.0
+    helm.sh/chart: kubers-1.1.2
 spec:
   ports:
     - port: 443
@@ -78,7 +78,7 @@ metadata:
     app.kubernetes.io/name: kubers
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: kubers
-    helm.sh/chart: kubers-1.1.0
+    helm.sh/chart: kubers-1.1.2
 spec:
   replicas: 1
   selector:
@@ -99,18 +99,22 @@ spec:
               valueFrom:
                 fieldRef:
                   fieldPath: metadata.namespace
-            - name: AGENT_INJECT_LISTEN
+            - name: KUBERSD_LISTEN
               value: ":8080"
-            - name: AGENT_INJECT_LOG_LEVEL
+            - name: KUBERSD_LOG_LEVEL
               value: "info"
-            - name: AGENT_INJECT_AGENT_IMAGE
+            - name: KUBERSD_AGENT_IMAGE
               value: "docker.io/jacops/kubers-agent:latest"
-            - name: AGENT_INJECT_LOG_FORMAT
+            - name: KUBERSD_LOG_FORMAT
               value: "standard"
-            - name: AGENT_INJECT_TLS_AUTO
+            - name: KUBERSD_TLS_AUTO
               value: kubers-cfg
-            - name: AGENT_INJECT_TLS_AUTO_HOSTS
+            - name: KUBERSD_TLS_AUTO_HOSTS
               value: "webhook,webhook.$(NAMESPACE),webhook.$(NAMESPACE).svc"
+            - name: KUBERS_AGENT_LOG_FORMAT
+              value: standard
+            - name: KUBERS_AGENT_LOG_LEVEL
+              value: info
           args:
             - webhook
             - 2>&1
@@ -125,7 +129,7 @@ metadata:
     app.kubernetes.io/name: kubers
     app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: kubers
-    helm.sh/chart: kubers-1.1.0
+    helm.sh/chart: kubers-1.1.2
 webhooks:
   - name: kubers.jacops.pl
     clientConfig:

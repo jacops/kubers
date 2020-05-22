@@ -114,7 +114,7 @@ func TestHandlerHandle(t *testing.T) {
 		},
 		{
 			"basic pod injection",
-			Handler{Log: hclog.Default().Named("handler"), Image: "image"},
+			Handler{Log: hclog.Default().Named("handler"), InjectorConfig: &AgentInjectorConfig{Image: "image"}},
 			v1beta1.AdmissionRequest{
 				Namespace: "test",
 				Object: encodeRaw(t, &corev1.Pod{

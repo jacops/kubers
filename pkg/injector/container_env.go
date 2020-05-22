@@ -23,7 +23,7 @@ func (a *AgentInjector) newConfig() ([]byte, error) {
 	providerName = a.Annotations[AnnotationAgentProvider]
 
 	agentConfig := agent.Config{
-		Secrets:      a.Secrets,
+		Secrets:        a.Secrets,
 		ProviderName:   providerName,
 		ProviderConfig: a.getProviderConfig(providerName),
 	}
@@ -54,6 +54,16 @@ func (a *AgentInjector) ContainerEnvVars(init bool) ([]corev1.EnvVar, error) {
 	if err != nil {
 		return envs, err
 	}
+
+	envs = append(envs, corev1.EnvVar{
+		Name:  "AGENT_LOG_LEVEL",
+		Value: a.Annotations[AnnotationAgentLogLevel],
+	})
+
+	envs = append(envs, corev1.EnvVar{
+		Name:  "AGENT_LOG_FORMAT",
+		Value: a.Annotations[AnnotationAgentLogFormat],
+	})
 
 	b64Config := base64.StdEncoding.EncodeToString(config)
 	envs = append(envs, corev1.EnvVar{

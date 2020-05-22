@@ -31,6 +31,10 @@ injector:
       certFile:
 
 agent:
+  log:
+    level: info
+    format: standard
+    
   provider:
     name:
     aws:

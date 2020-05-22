@@ -29,17 +29,19 @@ type Command struct {
 	UI      cli.Ui
 	Version string
 
-	flagListen      string // Address of Vault Server
-	flagLogLevel    string // Log verbosity
-	flagLogFormat   string // Log format
-	flagCertFile    string // TLS Certificate to serve
-	flagKeyFile     string // TLS private key to serve
-	flagAutoName    string // MutatingWebhookConfiguration for updating
-	flagAutoHosts   string // SANs for the auto-generated TLS cert.
-	flagAgentImage  string // Agent Docker image
-	flagAgentProvider string // Agent Provider
+	flagListen         string // Address of Vault Server
+	flagLogLevel       string // Log verbosity
+	flagLogFormat      string // Log format
+	flagCertFile       string // TLS Certificate to serve
+	flagKeyFile        string // TLS private key to serve
+	flagAutoName       string // MutatingWebhookConfiguration for updating
+	flagAutoHosts      string // SANs for the auto-generated TLS cert.
+	flagAgentImage     string // Agent Docker image
+	flagAgentLogLevel  string // Agent log verbosity
+	flagAgentLogFormat string // Agent log format
+	flagAgentProvider  string // Agent Provider
 
-	flagAWSRegion string // AWS region of Secret Manager
+	flagAgentProviderAWSRegion string // AWS region of Secret Manager
 
 	flagSet *flag.FlagSet
 
@@ -48,6 +50,7 @@ type Command struct {
 	cert atomic.Value
 }
 
+//Run ...
 func (c *Command) Run(args []string) int {
 	ctx, cancelFunc := context.WithCancel(context.Background())
 	defer cancelFunc()
@@ -57,8 +60,13 @@ func (c *Command) Run(args []string) int {
 		return 1
 	}
 
-	if err := c.parseEnvs(); err != nil {
-		c.UI.Error(fmt.Sprintf("Error parsing environment variables: %s", err))
+	if err := c.parseKubersDEnvs(); err != nil {
+		c.UI.Error(fmt.Sprintf("Error parsing kubersd environment variables: %s", err))
+		return 1
+	}
+
+	if err := c.parseKubersAgentEnvs(); err != nil {
+		c.UI.Error(fmt.Sprintf("Error parsing kubers agent environment variables: %s", err))
 		return 1
 	}
 
@@ -105,14 +113,21 @@ func (c *Command) Run(args []string) int {
 		Level:      level,
 		JSONFormat: (c.flagLogFormat == "json")})
 
+	logger.Info(c.flagAgentLogFormat)
+	logger.Info(c.flagAgentLogLevel)
+
 	// Build the HTTP handler and server
 	injectorHandler := injector.Handler{
 		Clientset:         clientset,
 		RequireAnnotation: true,
 		Log:               logger,
-		Image:             c.flagAgentImage,
-		ProviderName:        c.flagAgentProvider,
-		AWSRegion:         c.flagAWSRegion,
+		InjectorConfig: &injector.AgentInjectorConfig{
+			Image:                  c.flagAgentImage,
+			AgentProviderName:      c.flagAgentProvider,
+			AgentProviderAWSRegion: c.flagAgentProviderAWSRegion,
+			LogLevel:               c.flagAgentLogLevel,
+			LogFormat:              c.flagAgentLogFormat,
+		},
 	}
 
 	mux := http.NewServeMux()

@@ -37,9 +37,7 @@ type Handler struct {
 	RequireAnnotation bool
 	Clientset         *kubernetes.Clientset
 	Log               hclog.Logger
-	Image             string
-	ProviderName        string
-	AWSRegion         string
+	InjectorConfig    *AgentInjectorConfig
 }
 
 // Handle is the http.HandlerFunc implementation that actually handles the
@@ -134,12 +132,8 @@ func (h *Handler) Mutate(req *v1beta1.AdmissionRequest) *v1beta1.AdmissionRespon
 
 	h.Log.Debug("setting default annotations..")
 	var patches []*jsonpatch.JsonPatchOperation
-	cfg := AgentInjectorConfig{
-		Image:      h.Image,
-		ProviderName: h.ProviderName,
-		AWSRegion:  h.AWSRegion,
-	}
-	err = Init(&pod, cfg)
+
+	err = Init(&pod, h.InjectorConfig)
 	if err != nil {
 		err := fmt.Errorf("error adding default annotations: %s", err)
 		return admissionError(err)
