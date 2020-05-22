@@ -2,7 +2,6 @@ package injector
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -122,8 +121,6 @@ func TestHandlerHandle(t *testing.T) {
 					ObjectMeta: metav1.ObjectMeta{
 						Annotations: map[string]string{
 							AnnotationAgentInject: "true",
-							fmt.Sprintf("%s-%s", AnnotationAgentInjectSecret, "foobar"):     "foobar",
-							fmt.Sprintf("%s-%s", AnnotationVaultSecretVolumePath, "foobar"): "/foobar",
 						},
 					},
 					Spec: basicSpec,
