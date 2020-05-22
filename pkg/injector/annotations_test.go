@@ -1,12 +1,39 @@
 package injector
 
 import (
+	"fmt"
 	"testing"
 
 	corev1 "k8s.io/api/core/v1"
 
 	"github.com/mattbaird/jsonpatch"
 )
+
+func TestSecretsAreBuildFromAnnotations(t *testing.T) {
+	tests := []struct {
+		annotations map[string]string
+		name        string
+	}{
+		{name: "foobar", annotations: map[string]string{AnnotationAgentInject: "true", fmt.Sprintf("%s-%s", AnnotationAgentInjectSecret, "foobar"): "foobar"}},
+	}
+
+	for _, tt := range tests {
+		a := AgentInjector{
+			Annotations: tt.annotations,
+		}
+		secrets := a.secrets()
+
+		if len(secrets) == 0 {
+			t.Errorf("Secrets haven't been processed")
+			return
+		}
+
+		if secrets[0].Name != tt.name {
+			t.Errorf("Secret name not set properly. Got: %s, expected: %s", secrets[0].Name, tt.name)
+		}
+
+	}
+}
 
 func TestInitCanSet(t *testing.T) {
 	annotations := make(map[string]string)

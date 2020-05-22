@@ -18,6 +18,20 @@ type testChErrval struct {
 	val error
 }
 
+func TestPipelineFactory(t *testing.T) {
+	tests := []Pipeline{
+		{provider: &DummyProvider{}, writer: NewDummyPathWriter(), logger: hclog.New(&hclog.LoggerOptions{}), workersNumber: 1},
+	}
+	for _, tt := range tests {
+		t.Run("factory", func(t *testing.T) {
+			p := NewPipeline(tt.writer, tt.provider, tt.logger, tt.workersNumber)
+			if p.writer != tt.writer {
+				t.Errorf("Writer not assigned")
+			}
+		})
+	}
+}
+
 func TestMergeSecretsChannelsCanTransmitSecrets(t *testing.T) {
 	tests := []struct {
 		name           string
