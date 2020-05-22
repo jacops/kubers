@@ -14,7 +14,14 @@ func TestSecretsAreBuildFromAnnotations(t *testing.T) {
 		annotations map[string]string
 		name        string
 	}{
-		{name: "foobar", annotations: map[string]string{AnnotationAgentInject: "true", fmt.Sprintf("%s-%s", AnnotationAgentInjectSecret, "foobar"): "foobar"}},
+		{
+			name: "foobar",
+			annotations: map[string]string{
+				AnnotationAgentInject: "true",
+				fmt.Sprintf("%s-%s", AnnotationAgentInjectSecret, "foobar"):     "foobar",
+				fmt.Sprintf("%s-%s", AnnotationVaultSecretVolumePath, "foobar"): "/foobar",
+			},
+		},
 	}
 
 	for _, tt := range tests {
