@@ -30,6 +30,14 @@ func TestMergeSecretsChannelsCanTransmitSecrets(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			pipeline := &Pipeline{
+				provider: &DummyProvider{},
+				writer:   NewDummyPathWriter(),
+				logger: hclog.New(&hclog.LoggerOptions{
+					Name: "handler",
+				}),
+			}
+
 			var clist []<-chan *Secret
 			var secrets []*Secret
 
@@ -44,7 +52,7 @@ func TestMergeSecretsChannelsCanTransmitSecrets(t *testing.T) {
 				}(pair)
 			}
 
-			merged := mergeSecretsChannels(clist)
+			merged := pipeline.mergeSecretsChannels(clist)
 
 			msgCounter := 0
 			for sc := range merged {
@@ -80,6 +88,14 @@ func TestMergeErrorChannelsCanTransmitErrors(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			pipeline := &Pipeline{
+				provider: &DummyProvider{},
+				writer:   NewDummyPathWriter(),
+				logger: hclog.New(&hclog.LoggerOptions{
+					Name: "handler",
+				}),
+			}
+
 			var clist []<-chan error
 			var errs []error
 
@@ -94,7 +110,7 @@ func TestMergeErrorChannelsCanTransmitErrors(t *testing.T) {
 				}(pair)
 			}
 
-			merged := mergeErrorChannels(clist)
+			merged := pipeline.mergeErrorChannels(clist)
 
 			msgCounter := 0
 			for sc := range merged {
@@ -129,7 +145,14 @@ func TestFanOut(t *testing.T) {
 	msgCounter := 0
 	for _, tt := range tests {
 		t.Run("test", func(t *testing.T) {
-			fanoutc := fanOut(tt.secrets)
+			pipeline := &Pipeline{
+				provider: &DummyProvider{},
+				writer:   NewDummyPathWriter(),
+				logger: hclog.New(&hclog.LoggerOptions{
+					Name: "handler",
+				}),
+			}
+			fanoutc := pipeline.fanOut(tt.secrets)
 			for s := range fanoutc {
 				msgCounter++
 				found := false
@@ -170,7 +193,7 @@ func TestSecretsCanGoThroughPipeline(t *testing.T) {
 				logger: hclog.New(&hclog.LoggerOptions{
 					Name: "handler",
 				}),
-				workersNumber: 1,
+				workersNumber: tt.workerNumbers,
 			}
 			err := pipeline.Do(context.Background(), tt.secrets)
 

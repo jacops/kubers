@@ -33,9 +33,9 @@ func (p *Pipeline) Do(ctx context.Context, secrets []*Secret) error {
 	var pipe1, pipe2 <-chan *Secret
 	var pipe2List []<-chan *Secret
 
-	p.logger.Debug(fmt.Sprintf("Processing pipeline started with %d workers.", p.workersNumber))
+	p.logger.Info(fmt.Sprintf("Processing pipeline started with %d workers.", p.workersNumber))
 
-	pipe1 = fanOut(secrets)
+	pipe1 = p.fanOut(secrets)
 
 	for i := 1; i <= p.workersNumber; i++ {
 		pipe2, errc := p.populate(ctx, pipe1)
@@ -43,18 +43,19 @@ func (p *Pipeline) Do(ctx context.Context, secrets []*Secret) error {
 		errcList = append(errcList, errc)
 	}
 
-	pipe2 = mergeSecretsChannels(pipe2List)
+	pipe2 = p.mergeSecretsChannels(pipe2List)
 
 	for i := 1; i <= p.workersNumber; i++ {
 		errc = p.store(ctx, pipe2)
 		errcList = append(errcList, errc)
 	}
 
-	return waitForPipeline(errcList)
+	return p.waitForPipeline(errcList)
 }
 
-func waitForPipeline(cs []<-chan error) error {
-	errorc := mergeErrorChannels(cs)
+func (p *Pipeline) waitForPipeline(cs []<-chan error) error {
+	p.logger.Debug(fmt.Sprintf("Waiting for the pipeline to be finished."))
+	errorc := p.mergeErrorChannels(cs)
 	for err := range errorc {
 		if err != nil {
 			return err
@@ -75,6 +76,7 @@ func (p *Pipeline) populate(ctx context.Context, in <-chan *Secret) (<-chan *Sec
 		}()
 		for secret := range in {
 			value, err := p.provider.GetSecret(ctx, secret.URL)
+			p.logger.Debug(fmt.Sprintf("Secret %s retrieved.", secret.Name))
 			if err != nil {
 				errc <- err
 			}
@@ -101,6 +103,7 @@ func (p *Pipeline) store(ctx context.Context, in <-chan *Secret) <-chan error {
 				errc <- err
 				return
 			}
+			p.logger.Debug(fmt.Sprintf("Secret %s written.", secret.Name))
 			select {
 			case <-ctx.Done():
 				return
@@ -112,7 +115,8 @@ func (p *Pipeline) store(ctx context.Context, in <-chan *Secret) <-chan error {
 	return errc
 }
 
-func fanOut(secrets []*Secret) <-chan *Secret {
+func (p *Pipeline) fanOut(secrets []*Secret) <-chan *Secret {
+	p.logger.Debug(fmt.Sprintf("Starting the fanout process."))
 	out := make(chan *Secret)
 	go func() {
 		for _, secret := range secrets {
@@ -123,7 +127,9 @@ func fanOut(secrets []*Secret) <-chan *Secret {
 	return out
 }
 
-func mergeErrorChannels(cs []<-chan error) <-chan error {
+func (p *Pipeline) mergeErrorChannels(cs []<-chan error) <-chan error {
+	p.logger.Debug(fmt.Sprintf("Merging error channels."))
+
 	var wg sync.WaitGroup
 	out := make(chan error, len(cs))
 
@@ -145,10 +151,12 @@ func mergeErrorChannels(cs []<-chan error) <-chan error {
 	return out
 }
 
-func mergeSecretsChannels(cs []<-chan *Secret) <-chan *Secret {
-	var wg sync.WaitGroup
+func (p *Pipeline) mergeSecretsChannels(cs []<-chan *Secret) <-chan *Secret {
+	p.logger.Debug(fmt.Sprintf("Merging back secret channels."))
 
+	var wg sync.WaitGroup
 	out := make(chan *Secret)
+
 	send := func(c <-chan *Secret) {
 		for n := range c {
 			out <- n
