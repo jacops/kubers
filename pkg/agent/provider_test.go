@@ -5,12 +5,13 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/hashicorp/go-hclog"
 	"github.com/jacops/kubers/pkg/provider"
 )
 
 func TestProviderCanBeFoundByName(t *testing.T) {
 	tests := []struct {
-		name       string
+		name         string
 		providerType string
 	}{
 		{name: "azure", providerType: "*azure.Provider"},
@@ -19,7 +20,9 @@ func TestProviderCanBeFoundByName(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			provider, err := newProvider(tt.name, &provider.Config{}, getLogger())
+			provider, err := newProvider(tt.name, &provider.Config{}, hclog.New(&hclog.LoggerOptions{
+				Name: "handler",
+			}))
 			providerTypeStr := reflect.TypeOf(provider).String()
 			if providerTypeStr != tt.providerType {
 				t.Errorf("Unexpected provider type (%s) by name (%s)", providerTypeStr, tt.name)
@@ -40,7 +43,9 @@ func TestNotFoundProviderThrowingError(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			provider, err := newProvider(tt.name, &provider.Config{}, getLogger())
+			provider, err := newProvider(tt.name, &provider.Config{}, hclog.New(&hclog.LoggerOptions{
+				Name: "handler",
+			}))
 
 			if provider != nil {
 				t.Errorf("did not expect any provider: %s", tt.name)

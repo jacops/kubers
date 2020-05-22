@@ -1,6 +1,7 @@
 package agent
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/hashicorp/go-hclog"
@@ -9,7 +10,12 @@ import (
 	"github.com/jacops/kubers/pkg/provider"
 )
 
-func newProvider(name string, config *provider.Config, logger hclog.Logger) (provider.Provider, error) {
+// Provider is an interfce that needs to be implemented by providers
+type Provider interface {
+	GetSecret(ctx context.Context, secretURL string) (string, error)
+}
+
+func newProvider(name string, config *provider.Config, logger hclog.Logger) (Provider, error) {
 	switch name {
 	case "azure":
 		return azureProvider.New(config, logger), nil

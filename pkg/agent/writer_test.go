@@ -29,17 +29,17 @@ func TestMountPathWriterSecretIsOperatingOnRightValues(t *testing.T) {
 	tests := []struct {
 		name     string
 		writer   SecretsWriter
-		metadata *SecretMetadata
+		metadata *Secret
 		secret   string
 	}{
-		{writer: mountPathWriter, secret: "changeme", metadata: &SecretMetadata{}},
-		{writer: mountPathWriter, secret: "somesecret", metadata: &SecretMetadata{}},
-		{writer: mountPathWriter, secret: "#@#F##F#F", metadata: &SecretMetadata{}},
+		{writer: mountPathWriter, secret: "changeme", metadata: &Secret{}},
+		{writer: mountPathWriter, secret: "somesecret", metadata: &Secret{}},
+		{writer: mountPathWriter, secret: "#@#F##F#F", metadata: &Secret{}},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.secret, func(t *testing.T) {
-			err := tt.writer.WriteSecret(tt.secret, tt.metadata)
+			err := tt.writer.WriteSecret(tt.metadata)
 
 			if err != nil {
 				t.Errorf("did not expect any errors: %s", err)

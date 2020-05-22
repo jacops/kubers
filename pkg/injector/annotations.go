@@ -96,8 +96,8 @@ func Init(pod *corev1.Pod, cfg AgentInjectorConfig) error {
 // secrets parses annotations with the pattern "kubers.jacops.com/agent-inject-secret-".
 // Everything following the final dash becomes the name of the secret,
 // and the value is the path in Vault.
-func (a *AgentInjector) secrets() []*agent.SecretMetadata {
-	var secrets []*agent.SecretMetadata
+func (a *AgentInjector) secrets() []*agent.Secret {
+	var secrets []*agent.Secret
 
 	for name, path := range a.Annotations {
 		secretName := fmt.Sprintf("%s-", AnnotationAgentInjectSecret)
@@ -120,7 +120,7 @@ func (a *AgentInjector) secrets() []*agent.SecretMetadata {
 				mountPath = val
 			}
 
-			secrets = append(secrets, &agent.SecretMetadata{
+			secrets = append(secrets, &agent.Secret{
 				Name:      name,
 				URL:       path,
 				MountPath: mountPath,

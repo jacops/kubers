@@ -38,7 +38,7 @@ type AgentInjector struct {
 
 	// Secrets are all the templates, the path in Vault where the secret can be
 	//found, and the unique name of the secret which will be used for the filename.
-	Secrets []*agent.SecretMetadata
+	Secrets []*agent.Secret
 
 	// Status is the current injection status.  The only status considered is "injected",
 	// which prevents further mutations.  A user can patch this annotation to force a new

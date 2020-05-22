@@ -8,11 +8,6 @@ import (
 	"github.com/hashicorp/go-hclog"
 )
 
-// SecretsWriter is an interface for writing secrets
-type SecretsWriter interface {
-	WriteSecret(value string, metadata *SecretMetadata) error
-}
-
 type writeFile func(filename string, data []byte, perm os.FileMode) error
 
 ///// MOUNT PATH WRITER \\\\\\
@@ -32,18 +27,18 @@ func NewMountPathWriter(logger hclog.Logger) *MountPathWriter {
 }
 
 // WriteSecret is a main method for making a secret available to the other container
-func (w *MountPathWriter) WriteSecret(value string, metadata *SecretMetadata) error {
-	fullPath := getFullPath(metadata)
-	if err := w.writeFile(fullPath, []byte(value), 0644); err != nil {
+func (w *MountPathWriter) WriteSecret(secret *Secret) error {
+	fullPath := getFullPath(secret)
+	if err := w.writeFile(fullPath, []byte(secret.Value), 0644); err != nil {
 		return err
 	}
 
-	w.logger.Debug(fmt.Sprintf("Secret %s saved to %s", metadata.Name, fullPath))
+	w.logger.Debug(fmt.Sprintf("Secret %s saved to %s", secret.Name, fullPath))
 	return nil
 }
 
 ////////////////////////////////
 
-func getFullPath(metadata *SecretMetadata) string {
-	return metadata.MountPath + "/" + metadata.Name
+func getFullPath(secret *Secret) string {
+	return secret.MountPath + "/" + secret.Name
 }

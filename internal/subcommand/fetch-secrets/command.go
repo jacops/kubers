@@ -1,6 +1,7 @@
 package fetchsecrets
 
 import (
+	"context"
 	"encoding/base64"
 	"encoding/json"
 	"flag"
@@ -27,6 +28,8 @@ type Command struct {
 }
 
 func (c *Command) Run(args []string) int {
+	ctx, cancelFunc := context.WithCancel(context.Background())
+	defer cancelFunc()
 
 	c.once.Do(c.init)
 	if err := c.flagSet.Parse(args); err != nil {
@@ -68,7 +71,7 @@ func (c *Command) Run(args []string) int {
 		return 1
 	}
 
-	if err := agent.Retrieve(); err != nil {
+	if err := agent.Process(ctx); err != nil {
 		c.UI.Error(fmt.Sprintf("Error occurred while retrieving secrets: %s", err))
 	}
 
