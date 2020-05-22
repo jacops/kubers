@@ -1,7 +1,7 @@
 # Kubers - Kubernetes Remote Secrets
 [![Build Status](https://cloud.drone.io/api/badges/jacops/kubers/status.svg)](https://cloud.drone.io/jacops/kubers)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/jacops/kubers)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/jacops/kubers)
+[![Go Report Card](https://goreportcard.com/badge/github.com/jacops/kubers)](https://goreportcard.com/report/github.com/jacops/kubers)
 ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/jacops/kubersctl)
 ![Docker Pulls](https://img.shields.io/docker/pulls/jacops/kubersctl)
 ![GitHub](https://img.shields.io/github/license/jacops/kubers)

@@ -12,7 +12,7 @@ func TestConfigCanBeMarshalledToJson(t *testing.T) {
 		expectedNumberOfSecrets int
 	}{
 		{name: "withnosecrets", config: Config{}, expectedNumberOfSecrets: 0},
-		{name: "withnosecrets", config: Config{Secrets: []*Secret{&Secret{Name: "dummy-name"}}}, expectedNumberOfSecrets: 1},
+		{name: "withnosecrets", config: Config{Secrets: []*Secret{{Name: "dummy-name"}}}, expectedNumberOfSecrets: 1},
 	}
 
 	for _, tt := range tests {

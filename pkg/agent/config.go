@@ -9,9 +9,9 @@ import (
 // Config is the top level struct that composes am Agent
 // configuration file.
 type Config struct {
-	Secrets        []*Secret `json:"secret"`
-	ProviderName   string            `json:"provider_name"`
-	ProviderConfig *provider.Config  `json:"provider_config"`
+	Secrets        []*Secret        `json:"secret"`
+	ProviderName   string           `json:"provider_name"`
+	ProviderConfig *provider.Config `json:"provider_config"`
 }
 
 // Secret is a metadata object sued for fetching and storing secret

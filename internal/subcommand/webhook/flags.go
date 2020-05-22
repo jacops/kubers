@@ -9,10 +9,14 @@ import (
 )
 
 const (
-	DefaultLogLevel  = "info"
+	//DefaultLogLevel ...
+	DefaultLogLevel = "info"
+
+	//DefaultLogFormat ...
 	DefaultLogFormat = "standard"
 )
 
+//KubersDSpecification ...
 type KubersDSpecification struct {
 	// Listen is the KUBERS_LISTEN environment variable.
 	Listen string `split_words:"true" `
@@ -51,6 +55,7 @@ type KubersDSpecification struct {
 	AWSRegion string `envconfig:"provider_aws_region"`
 }
 
+//KubersAgentSpecification ...
 type KubersAgentSpecification struct {
 	// LogLevel is the KUBERS_AGENT_LOG_LEVEL environment variable.
 	LogLevel string `split_words:"true"`

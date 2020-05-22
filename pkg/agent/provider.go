@@ -10,7 +10,7 @@ import (
 	"github.com/jacops/kubers/pkg/provider"
 )
 
-// Provider is an interfce that needs to be implemented by providers
+// Provider is an interface that needs to be implemented by providers
 type Provider interface {
 	GetSecret(ctx context.Context, secretURL string) (string, error)
 }
