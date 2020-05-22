@@ -12,4 +12,9 @@ steps:
   commands:
   - make test-coverage
   - make build
-  - bash <(curl -s https://codecov.io/bash)
+
+- name: coverage
+  image: plugins/codecov
+  settings:
+    token:
+      from_secret: codecov-token
