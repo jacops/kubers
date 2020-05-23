@@ -3,7 +3,7 @@
 .DEFAULT_GOAL := build
 .PHONY: all fmt lint check test build image clean deploy
 
-IMAGE_TAG:=$(shell ./docker/image-tag)
+VERSION:=$(shell ./scripts/version)
 IMAGE_PREFIX=jacops/
 NAMESPACE=kubers
 CLUSTER_NAME=kubers
@@ -16,7 +16,7 @@ ifneq ("$(wildcard .env)","")
 endif
 
 show-version:
-	@echo $(IMAGE_TAG)
+	@echo $(VERSION)
 
 minikube:
 	@minikube start -p $(CLUSTER_NAME) --insecure-registry "10.0.0.0/24"
@@ -46,8 +46,8 @@ clean:
 	@rm -rf dist
 
 docker-build-%:
-	docker build -f cmd/$*/dev.Dockerfile -t $(IMAGE_PREFIX)$*:$(IMAGE_TAG) .
-	docker tag $(IMAGE_PREFIX)$*:$(IMAGE_TAG) $(IMAGE_PREFIX)$*:latest
+	docker build -f cmd/$*/dev.Dockerfile -t $(IMAGE_PREFIX)$*:$(VERSION) .
+	docker tag $(IMAGE_PREFIX)$*:$(VERSION) $(IMAGE_PREFIX)$*:latest
 
 docker-build: docker-build-kubersd docker-build-kubers-agent
 
@@ -59,9 +59,9 @@ generate-deployment-manifests:
 
 k8s-deploy-kubers:
 	helm upgrade --devel -i kubers \
-		--set injector.image.tag=$(IMAGE_TAG) \
+		--set injector.image.tag=$(VERSION) \
 		--set injector.log.level=debug \
-		--set agent.image.tag=$(IMAGE_TAG) \
+		--set agent.image.tag=$(VERSION) \
 		--set agent.log.level=debug \
     --wait --namespace kubers ./chart
 
