@@ -5,12 +5,14 @@ ARG VERSION
 
 WORKDIR /build
 
-RUN apk update && apk add --no-cache ca-certificates tzdata && update-ca-certificates
+RUN set -ex && \
+    apk update && apk add --no-cache ca-certificates tzdata && update-ca-certificates
 
 ENV USER=kubers
 ENV UID=10001
 
-RUN adduser \
+RUN set -ex && \
+    adduser \
     --disabled-password \
     --gecos "" \
     --home "/nonexistent" \
@@ -19,9 +21,11 @@ RUN adduser \
     --uid "${UID}" \
     "${USER}"
 
-RUN wget https://github.com/jacops/kubers/releases/download/v${VERSION}/kubers_${VERSION}_Linux_x86_64.tar.gz
-RUN tar -xvf kubers_${VERSION}_Linux_x86_64.tar.gz
+RUN set -ex && \
+    wget https://github.com/jacops/kubers/releases/download/v${VERSION#?}/kubers_${VERSION#?}_Linux_x86_64.tar.gz
 
+RUN set -ex && \
+    tar -xvf kubers_${VERSION#?}_Linux_x86_64.tar.gz
 
 FROM scratch
 
