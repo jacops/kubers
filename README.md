@@ -3,8 +3,8 @@
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/jacops/kubers)
 [![Go Report Card](https://goreportcard.com/badge/github.com/jacops/kubers)](https://goreportcard.com/report/github.com/jacops/kubers)
 [![codecov](https://codecov.io/gh/jacops/kubers/branch/master/graph/badge.svg)](https://codecov.io/gh/jacops/kubers)
-![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/jacops/kubersctl)
-![Docker Pulls](https://img.shields.io/docker/pulls/jacops/kubersctl)
+![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/jacops/kubers-agent)
+![Docker Pulls](https://img.shields.io/docker/pulls/jacops/kubers-agent)
 ![GitHub](https://img.shields.io/github/license/jacops/kubers)
 
 Kubers is a simple implementation of a SecOps pattern, where a sidecar or init container is responsible for retrieving secrets from services like Azure KeyVault and making them available to the user's application via shared memory volume.
