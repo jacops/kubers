@@ -54,7 +54,7 @@ steps:
 - name: image
   image: plugins/docker
   environment:
-    VERSION: "${DRONE_SEMVER_SHORT}"
+    VERSION: "${DRONE_TAG}"
   settings:
     repo: jacops/kubersd
     auto_tag: true
@@ -78,7 +78,7 @@ steps:
 - name: image
   image: plugins/docker
   environment:
-    VERSION: "${DRONE_SEMVER_SHORT}"
+    VERSION: "${DRONE_TAG}"
   settings:
     repo: jacops/kubers-agent
     auto_tag: true
