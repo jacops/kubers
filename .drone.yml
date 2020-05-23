@@ -48,10 +48,10 @@ volumes:
 
 ---
 kind: pipeline
-name: docker
+name: docker-kubersd
 
 steps:
-- name: kubersd
+- name: image
   image: plugins/docker
   environment:
     VERSION: "${DRONE_SEMVER_SHORT}"
@@ -68,10 +68,17 @@ steps:
   when:
     event: tag
 
-- name: kubers-agent
+depends_on:
+  - default
+
+---
+  
+kind: pipeline
+name: docker-kubers-agent
+- name: image
   image: plugins/docker
   environment:
-    VERSION: "${DRONE_SEMVER_SHORT}"  
+    VERSION: "${DRONE_SEMVER_SHORT}"
   settings:
     repo: jacops/kubers-agent
     auto_tag: true

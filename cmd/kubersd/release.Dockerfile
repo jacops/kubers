@@ -22,10 +22,10 @@ RUN set -ex && \
     "${USER}"
 
 RUN set -ex && \
-    wget https://github.com/jacops/kubers/releases/download/v${VERSION#?}/kubers_${VERSION#?}_Linux_x86_64.tar.gz
+    wget https://github.com/jacops/kubers/releases/download/v${VERSION}/kubers_${VERSION}_Linux_x86_64.tar.gz
 
 RUN set -ex && \
-    tar -xvf kubers_${VERSION#?}_Linux_x86_64.tar.gz
+    tar -xvf kubers_${VERSION}_Linux_x86_64.tar.gz
 
 FROM scratch
 
