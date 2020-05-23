@@ -42,40 +42,7 @@ steps:
   when:
     event: tag
 
-volumes:
-  - name: deps
-    temp: {}
-
----
-kind: pipeline
-name: docker-kubersd
-
-steps:
-- name: image
-  image: plugins/docker
-  environment:
-    VERSION: "${DRONE_TAG}"
-  settings:
-    repo: jacops/kubersd
-    auto_tag: true
-    dockerfile: cmd/kubersd/release.Dockerfile
-    username:
-      from_secret: docker_hub_username
-    password:
-      from_secret: docker_hub_password
-    build_args_from_env:
-      - VERSION
-  when:
-    event: tag
-
-depends_on:
-  - default
-
----
-kind: pipeline
-name: docker-kubers-agent
-steps:
-- name: image
+- name: docker-kubers-agent
   image: plugins/docker
   environment:
     VERSION: "${DRONE_TAG}"
@@ -91,6 +58,28 @@ steps:
       - VERSION
   when:
     event: tag
+  depends_on:
+    - release
 
-depends_on:
-  - default
+- name: docker-kubersd
+  image: plugins/docker
+  environment:
+    VERSION: "${DRONE_TAG}"
+  settings:
+    repo: jacops/kubersd
+    auto_tag: true
+    dockerfile: cmd/kubersd/release.Dockerfile
+    username:
+      from_secret: docker_hub_username
+    password:
+      from_secret: docker_hub_password
+    build_args_from_env:
+      - VERSION
+  when:
+    event: tag
+  depends_on:
+    - release
+
+volumes:
+  - name: deps
+    temp: {}
