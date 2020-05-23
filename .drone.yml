@@ -45,3 +45,37 @@ steps:
 volumes:
   - name: deps
     temp: {}
+
+---
+kind: pipeline
+name: docker
+
+steps:
+- name: kubersd
+  image: plugins/docker
+  settings:
+    repo: jacops/kubersd
+    auto_tag: true
+    dockerfile: cmd/kubersd/release.Dockerfile
+    username:
+      from_secret: docker_hub_username
+    password:
+      from_secret: docker_hub_password
+  when:
+    event: tag
+
+- name: kubers-agent
+  image: plugins/docker
+  settings:
+    repo: jacops/kubers-agent
+    auto_tag: true
+    dockerfile: cmd/kubers-agent/release.Dockerfile
+    username:
+      from_secret: docker_hub_username
+    password:
+      from_secret: docker_hub_password
+  when:
+    event: tag
+
+depends_on:
+  - default
