@@ -1,6 +1,7 @@
 package injector
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
@@ -200,6 +201,19 @@ func TestHandlerHandle_noBody(t *testing.T) {
 	h.Handle(rec, req)
 	require.Equal(t, http.StatusBadRequest, rec.Code)
 	require.Contains(t, rec.Body.String(), "body")
+}
+
+// Test that no body results in an error
+func TestHandlerHandle_errDecodingAdmissionRequst(t *testing.T) {
+	var jsonStr = []byte("bad payload")
+	req, err := http.NewRequest("POST", "/", bytes.NewBuffer(jsonStr))
+	require.NoError(t, err)
+	req.Header.Set("Content-Type", "application/json")
+
+	h := Handler{Log: hclog.Default().Named("handler")}
+	rec := httptest.NewRecorder()
+	h.Handle(rec, req)
+	require.Equal(t, http.StatusInternalServerError, rec.Code)
 }
 
 // encodeRaw is a helper to encode some data into a RawExtension.
