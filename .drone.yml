@@ -7,14 +7,41 @@ platform:
   arch: amd64
 
 steps:
+- name: fetch
+  image: docker:git
+  commands:
+    - git fetch --tags
+
 - name: test
   image: golang:1.14
+  volumes:
+    - name: deps
+      path: /go
   commands:
   - make test-coverage
-  - make build
 
 - name: coverage
   image: plugins/codecov
   settings:
     token:
       from_secret: codecov-token
+  when:
+    branch:
+    - master
+
+- name: release
+  image: golang:1.14
+  environment:
+    GITHUB_TOKEN:
+      from_secret: github_token
+  volumes:
+    - name: deps
+      path: /go
+  commands:
+    - curl -sL https://git.io/goreleaser | bash
+  when:
+    event: tag
+
+volumes:
+  - name: deps
+    temp: {}

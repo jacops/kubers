@@ -10,7 +10,7 @@ CLUSTER_NAME=kubers
 GOOS=linux
 GOARCH=amd64
 
-ifeq ("$(wildcard ".env")","")
+ifneq ("$(wildcard .env)","")
 	include .env
 	export $(shell sed 's/=.*//' .env)
 endif
