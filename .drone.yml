@@ -26,8 +26,7 @@ steps:
     token:
       from_secret: codecov-token
   when:
-    branch:
-    - master
+    branch: master
 
 - name: release
   image: golang:1.14
@@ -40,7 +39,7 @@ steps:
   commands:
     - curl -sL https://git.io/goreleaser | bash
   when:
-    event: tag
+    tag: v*
 
 - name: docker-kubers-agent
   image: plugins/docker
@@ -57,7 +56,7 @@ steps:
     build_args_from_env:
       - VERSION
   when:
-    event: tag
+    tag: v*
   depends_on:
     - release
 
@@ -76,7 +75,7 @@ steps:
     build_args_from_env:
       - VERSION
   when:
-    event: tag
+    tag: v*
   depends_on:
     - release
 
