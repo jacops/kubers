@@ -53,6 +53,8 @@ name: docker
 steps:
 - name: kubersd
   image: plugins/docker
+  environment:
+    VERSION: "${DRONE_SEMVER_SHORT}"
   settings:
     repo: jacops/kubersd
     auto_tag: true
@@ -61,11 +63,15 @@ steps:
       from_secret: docker_hub_username
     password:
       from_secret: docker_hub_password
+    build_args_from_env:
+      - VERSION
   when:
     event: tag
 
 - name: kubers-agent
   image: plugins/docker
+  environment:
+    VERSION: "${DRONE_SEMVER_SHORT}"
   settings:
     repo: jacops/kubers-agent
     auto_tag: true
@@ -74,6 +80,8 @@ steps:
       from_secret: docker_hub_username
     password:
       from_secret: docker_hub_password
+    build_args_from_env:
+      - VERSION
   when:
     event: tag
 
