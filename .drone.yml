@@ -72,9 +72,9 @@ depends_on:
   - default
 
 ---
-  
 kind: pipeline
 name: docker-kubers-agent
+steps:
 - name: image
   image: plugins/docker
   environment:
