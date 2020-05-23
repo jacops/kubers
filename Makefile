@@ -1,3 +1,5 @@
+#!make
+
 .DEFAULT_GOAL := build
 .PHONY: all fmt lint check test build image clean deploy
 
@@ -7,6 +9,11 @@ NAMESPACE=kubers
 CLUSTER_NAME=kubers
 GOOS=linux
 GOARCH=amd64
+
+ifeq ("$(wildcard ".env")","")
+	include .env
+	export $(shell sed 's/=.*//' .env)
+endif
 
 show-version:
 	@echo $(IMAGE_TAG)
@@ -21,11 +28,11 @@ minikube-profile:
 	@kubectl config use-context $(CLUSTER_NAME)
 	@kubectl config set-context --current --namespace $(NAMESPACE)
 
-build-%:
-	@echo "Building $*..."
-	GOOS=$(GOOS) GOARCH=$(GOARCH) go build -i -v -ldflags="-X main.version=$(IMAGE_TAG)" -o dist/$* ./cmd/$*
+build:
+	goreleaser --snapshot --skip-publish --rm-dist
 
-build: build-kubersd build-kubers-agent
+release:
+	GITHUB_TOKEN=$(GITHUB_TOKEN) goreleaser --rm-dist
 
 test: unit-test
 
@@ -37,18 +44,6 @@ unit-test:
 
 clean:
 	@rm -rf dist
-
-docker-build-%: build-%
-	docker build -f docker/Dockerfile.$* -t $(IMAGE_PREFIX)$*:$(IMAGE_TAG) .
-	docker tag $(IMAGE_PREFIX)$*:$(IMAGE_TAG) $(IMAGE_PREFIX)$*:latest
-
-docker-build: docker-build-kubersd docker-build-kubers-agent
-
-docker-push-%:
-	docker push $(IMAGE_PREFIX)$*:$(IMAGE_TAG)
-	docker push $(IMAGE_PREFIX)$*:latest
-
-docker-push: docker-push-kubersd docker-push-kubers-agent
 
 generate-deployment-manifests:
 	helm template kubers \

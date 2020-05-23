@@ -24,6 +24,6 @@ COPY --from=builder /etc/group /etc/group
 
 USER kubers:kubers
 
-COPY dist/kubersd /usr/local/bin/kubersd
+COPY kubersd /usr/local/bin/kubersd
 
 ENTRYPOINT ["/usr/local/bin/kubersd"]

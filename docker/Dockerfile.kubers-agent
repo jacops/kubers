@@ -1,4 +1,4 @@
-# golang alpine 1.14.1
+# alpine 1.11.6
 FROM alpine@sha256:39eda93d15866957feaee28f8fc5adb545276a64147445c64992ef69804dbf01 as builder
 
 RUN apk update && apk add --no-cache ca-certificates tzdata && update-ca-certificates
@@ -24,6 +24,6 @@ COPY --from=builder /etc/group /etc/group
 
 USER kubers:kubers
 
-COPY dist/kubers-agent /usr/local/bin/kubers-agent
+COPY kubers-agent /usr/local/bin/kubers-agent
 
 ENTRYPOINT ["/usr/local/bin/kubers-agent"]
