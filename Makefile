@@ -96,9 +96,9 @@ k8s-restart-injector:
 
 k8s-restart-all: k8s-restart-injector sleep3 k8s-restart-example
 
-k8s-all-azure: docker-build k8s-deploy-kubers k8s-deploy-example-azure
+k8s-all-azure: build docker-build k8s-deploy-kubers k8s-deploy-example-azure
 
-k8s-all-aws: docker-build k8s-deploy-kubers k8s-deploy-example-aws
+k8s-all-aws: build docker-build k8s-deploy-kubers k8s-deploy-example-aws
 
 k8s-logs:
 	kubectl logs -f $(shell kubectl get pod -l app.kubernetes.io/name=kubers -o jsonpath="{.items[-1:].metadata.name}" --sort-by=.status.startTime)
