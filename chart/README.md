@@ -7,7 +7,7 @@ helm repo add jacops https://jacops.github.io/helm-charts/
 ```
 
 ### Install the chart with the release name `kubers`
-1. Create the flux namespace:
+1. Create the kubers namespace:
    ```
    kubectl create namespace kubers
    ```
