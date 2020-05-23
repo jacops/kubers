@@ -71,7 +71,7 @@ steps:
 - name: kubers-agent
   image: plugins/docker
   environment:
-    VERSION: "${DRONE_SEMVER_SHORT}"
+    VERSION: "${DRONE_SEMVER_SHORT}"  
   settings:
     repo: jacops/kubers-agent
     auto_tag: true
