@@ -35,9 +35,9 @@ helm repo add jacops https://jacops.github.io/helm-charts/
 | `injector.log.level` | `info` | Log verbosity level. Supported values (in order of detail) are "trace", "debug", "info", "warn", and "err" |
 | `injector.serviceAccount.create` | `true` | If `true`, create a new service account |
 | `injector.serviceAccount.name` | `kubers` | Service account to be used
-| `injector.resources.requests.cpu` | `50m` | CPU resource requests for the Flux deployment |
-| `injector.resources.requests.memory` | `64Mi` | Memory resource requests for the Flux deployment |
-| `injector.resources.limits` | `None` | CPU/memory resource limits for the Flux deployment |
+| `injector.resources.requests.cpu` | `50m` | CPU resource requests for the Kubers deployment |
+| `injector.resources.requests.memory` | `64Mi` | Memory resource requests for the Kubers deployment |
+| `injector.resources.limits` | `None` | CPU/memory resource limits for the Kubers deployment |
 | `injector.webhook.port` | `8080` | Address to bind listener to |
 | `injector.webhook.tls.auto` | `true` | Should the self-signed certs be used for the mutation webhook |
 | `injector.webhook.tls.caBundle` | `` | CA bundle for webhook. Should be used in conjunction with `certFile` and `keyFile` |
