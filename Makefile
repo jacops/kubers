@@ -45,6 +45,25 @@ unit-test:
 clean:
 	@rm -rf dist
 
+docker-build-%:
+	docker build -f cmd/$*/dev.Dockerfile -t $(IMAGE_PREFIX)$*:$(IMAGE_TAG) .
+	docker tag $(IMAGE_PREFIX)$*:$(IMAGE_TAG) $(IMAGE_PREFIX)$*:latest
+
+docker-build: docker-build-kubersd docker-build-kubers-agent
+
+docker-build-release:
+	docker build -f cmd/kubersd/release.Dockerfile --build-arg VERSION=$(IMAGE_TAG) -t $(IMAGE_PREFIX)kubersd:$(IMAGE_TAG) .
+	docker tag $(IMAGE_PREFIX)kubersd:$(IMAGE_TAG) $(IMAGE_PREFIX)kubersd:latest
+
+	docker build -f cmd/kubers-agent/release.Dockerfile --build-arg VERSION=$(IMAGE_TAG) -t $(IMAGE_PREFIX)kubers-agent:$(IMAGE_TAG) .
+	docker tag $(IMAGE_PREFIX)kubers-agent:$(IMAGE_TAG) $(IMAGE_PREFIX)kubers-agent:latest
+
+docker-push-%:
+	docker push $(IMAGE_PREFIX)$*:$(IMAGE_TAG)
+	docker push $(IMAGE_PREFIX)$*:latest
+
+docker-push: docker-push-kubersd docker-push-kubers-agent
+
 generate-deployment-manifests:
 	helm template kubers \
 		--set injector.image.tag=latest \
